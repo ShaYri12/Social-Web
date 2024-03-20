@@ -1,0 +1,101 @@
+@import "../../style.scss";
+
+.leftBar {
+  @include themify($themes) {
+    flex: 2;
+    position: fixed;
+    overflow: scroll;
+    background-color: themed("bg");
+    color: themed("textColor") !important;
+    height: 100%;
+
+    @include mobile{
+      display: none;
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .container {
+      padding: 20px;
+      max-height: 93vh; // Set a maximum height for the left bar
+      overflow: hidden; // Hide overflow initially
+      width: 200px;
+
+    &:hover {
+      overflow-y: scroll; // Show scroll bar when hovering
+    }
+
+      hr {
+        margin: 20px 0px;
+        border: none;
+        height: 0.5px;
+        background-color: themed("border");
+      }
+
+      .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        a{
+          color: themed("textColor") !important;
+          
+          &:hover{
+            color:blue !important
+          }
+        }
+
+        span {
+          font-size: 12px;
+        }
+
+        .user {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+
+          span {
+            
+            font-size: 14px;
+          }
+        }
+
+        .item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          img {
+            width: 30px;
+          }
+
+          span {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.leftbar-behind{
+  width: 200px;
+}
+
+@media screen and (max-width: 768px) {
+  .leftbar-behind{
+    display:none !important;
+  }
+  .leftBar {
+    display: none !important;
+  }
+}
