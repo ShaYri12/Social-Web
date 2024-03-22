@@ -46,7 +46,7 @@ const SideDrawer = () => {
       };
 
       const response = await fetch(
-        `http://localhost:8800/api/user?search=${search}`,
+        `http://localhost:8800/api/users/search?searchTerm=${search}`,
         config
       );
       if (!response.ok) {

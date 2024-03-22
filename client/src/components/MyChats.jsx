@@ -15,14 +15,14 @@ const MyChats = ({ fetchAgain, user }) => {
   const fetchChats = async () => {
     try {
       const response = await makeRequest.get('/chat');
-      console.log(response)
+      
       if (response.status !== 200) {
         throw new Error('Failed to fetch chats');
       }
       const data = response.data;
-      console.log("data: ",data)
-      await setChats([response.data]);
-      console.log("chats:", chats)
+      setChats(data);
+      console.log(chats)
+      
     } catch (error) {
       console.error('Error fetching chats:', error.message);
     }
@@ -33,6 +33,9 @@ const MyChats = ({ fetchAgain, user }) => {
     fetchChats();
   }, [fetchAgain]);
 
+  useEffect(() => {
+    console.log("chats:", chats);
+  }, [chats]);
   return (
     <Box
       className="h-[400px] rounded-lg"
