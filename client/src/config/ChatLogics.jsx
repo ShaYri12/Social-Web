@@ -43,8 +43,19 @@ export const getSender = (loggedUser, users) => {
 };
 
 export const getSender2 = (loggedUser, users) => {
-  return users[0]?._id === loggedUser?._id ? users[0].name : users[1].name;
+  // Add a guard to check if `users` is undefined
+  if (!users) {
+    console.error("Users is undefined");
+    return null; // or return a default value
+  }
+
+  // Add guards to check if users[0] and users[1] are defined
+  const senderId = users[0]?._id === loggedUser?._id ? users[0].name : users[1].name;
+  console.log("senderId:", senderId);
+
+  return senderId;
 };
+
 
 export const getSenderFull = (loggedUser, users) => {
   return users[0]._id === loggedUser._id ? users[1] : users[0];

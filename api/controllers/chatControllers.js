@@ -71,15 +71,14 @@ export const accessChat = asyncHandler(async (req, res) => {
   }
 });
 
-export const fetchChats = asyncHandler(async (req, res) => {
+export const fetchChats = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
 
-  jwt.verify(token, "secretkey", async(err, userInfo) => {
+  jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-  try {
-    const [results] = await db.query(`
+    const q = `
       SELECT 
         c.*, 
         u.*, 
@@ -101,15 +100,17 @@ export const fetchChats = asyncHandler(async (req, res) => {
       ) lm ON c.id = lm.chatId
       WHERE cu.userId = ?
       ORDER BY c.updated_at DESC
-    `, [userInfo.id]);
-    console.log("results: ",results)
+    `;
 
-    res.status(200).json(results);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-})
-});
+    db.query(q, [userInfo.id], (err, results) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
+      res.status(200).json(results);
+    });
+  });
+};
+
 
 export const createGroupChat = asyncHandler(async (req, res) => {
   verifyToken(req, res);

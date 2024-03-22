@@ -20,8 +20,9 @@ const MyChats = ({ fetchAgain, user }) => {
         throw new Error('Failed to fetch chats');
       }
       const data = response.data;
+      console.log("data: ",data)
       setChats(data);
-      
+      console.log("chats:", chats)
     } catch (error) {
       console.error('Error fetching chats:', error.message);
     }
