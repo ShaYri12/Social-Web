@@ -21,7 +21,7 @@ const MyChats = ({ fetchAgain, user }) => {
       }
       const data = response.data;
       console.log("data: ",data)
-      setChats(data);
+      await setChats([response.data]);
       console.log("chats:", chats)
     } catch (error) {
       console.error('Error fetching chats:', error.message);
