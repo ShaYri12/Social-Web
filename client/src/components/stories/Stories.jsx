@@ -50,7 +50,12 @@ const Stories = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
+      const res = await makeRequest.post("/upload", formData, {
+        // Increase timeout to handle slow connections
+        timeout: 60000, // 60 seconds
+        validateStatus: (status) => status >= 200 && status < 500,
+      });
+      console.log(res)
       const imgUrl = res.data;
       const newStory = {
         img: imgUrl,
@@ -103,7 +108,6 @@ const Stories = () => {
       const nextIndex = currentStoryIndex + 1;
       setCurrentStoryIndex(nextIndex);
       setCurrentStoryId(stories[currentUserId][nextIndex]?.storyId);
-      console.log("Moving to next story:", currentStoryId, nextIndex);
     } else {
       handleCloseModal();
     }
@@ -114,7 +118,6 @@ const Stories = () => {
       const prevIndex = currentStoryIndex - 1;
       setCurrentStoryIndex(prevIndex);
       setCurrentStoryId(stories[currentUserId][prevIndex]?.storyId);
-      console.log("Moving to previous story:", currentStoryId, prevIndex);
     }
   };
   
@@ -217,7 +220,7 @@ const Stories = () => {
           Object.entries(stories).map(([userId, userStories]) => (
             <div key={userId}>
               {userStories && userStories.length > 0 && (
-                <div className="story" onClick={() => handleStoryClick(userId, 0)}>
+                <div className="story my-auto" onClick={() => handleStoryClick(userId, 0)}>
                   <img src={userStories[0].url} alt="" />
                   <span>{userStories[0].name}</span>
                 </div>
@@ -239,10 +242,12 @@ const Stories = () => {
               stories={stories[currentUserId]}
               currentIndex={currentStoryIndex}
               width="100%"
-              height={710}
+              height="100vh"
               onAllStoriesEnd={handleCloseModal}
               onStoryEnd={handleNextStory}
               onPreviousStory={handlePreviousStory}
+              onNext={handleNextStory}
+              onPrevious={handlePreviousStory}
               onClose={handleCloseModal}
             />
           </div>

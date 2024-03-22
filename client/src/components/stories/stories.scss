@@ -30,6 +30,11 @@
     @include themify($themes) {
     color: themed("textColor");
     }
+
+    @media screen and (max-width: 480px){
+      align-self:flex-start;
+      margin-top: 13px !important;
+    }
   }
 
   .my-story{
@@ -93,6 +98,11 @@
       left: 50%; // Place the button at 50% from the left
       transform: translate(-50%, -50%); // Center the button both horizontally and vertically
       z-index: 1;
+
+      @include mobile {
+        padding: 0;
+        font-size: 12px;
+      }
     }
     
     div {

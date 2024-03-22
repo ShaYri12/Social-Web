@@ -183,21 +183,10 @@ const Navbar = () => {
                 <NavLink to="/followings" className="following align-items-center d-flex flex-column justify-content-center">
                   <PersonOutlinedIcon />
                 </NavLink>
-                <div className="profile dropdown align-items-center d-flex flex-column justify-content-center">
-                  <div className="position-relative">
-                    <button
-                      className="nav-link d-flex flex-column flex-md-row align-items-center"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <EmailOutlinedIcon />
-                    </button>
-                    <ul className={`dropdown-menu text-center position-absolute start-50 translate-middle-x ${darkMode ? 'dropdown-menu-dark' : ''}`}>
-                      <li>No Messages</li>
-                    </ul>
-                  </div>
-                </div>
+                <NavLink to="/message" className="message align-items-center d-flex flex-column justify-content-center">
+                <EmailOutlinedIcon />
+                </NavLink>
+                
                 <div className="profile dropdown align-items-center d-flex flex-column justify-content-center">
                   <div className="position-relative">
                     <button

@@ -1,8 +1,7 @@
 import "./share.scss";
 import Image from "../../assets/img.png";
-import Map from "../../assets/map.png";
-import Friend from "../../assets/friend.png";
-import { useContext, useState } from "react";
+import Video from "../../assets/9.png";
+import { useContext, useState, useRef } from "react"; // Import useRef
 import { AuthContext } from "../../context/authContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
@@ -11,19 +10,34 @@ import Avatar from '../../assets/avatar.jpg';
 const Share = () => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0); // State to track upload progress
+  const [uploading, setUploading] = useState(false); // State to track upload status
+  const videoRef = useRef(null); // Create a ref for the video element
 
-  const upload = async () => {
+  const upload = async (e) => {
     try {
+      if (e) {
+        e.preventDefault(); // Prevent page reload if called from an event
+      }
       const formData = new FormData();
       formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
-      console.log(res)
+      const config = {
+        onUploadProgress: (progressEvent) => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(progress); // Update upload progress
+        },
+        timeout: 3600000, // Set timeout to 60 seconds (adjust as needed)
+      };
+  
+      const res = await makeRequest.post("/upload", formData, config);
       return res.data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      throw err; // Propagate error to the caller
     }
   };
-
+  
+  
   const { currentUser } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
@@ -34,34 +48,53 @@ const Share = () => {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["posts"]);
+        setUploading(false); // Reset uploading state
       },
       onError: (error) => {
         console.error("Error creating post:", error);
+        setUploading(false); // Reset uploading state
       },
     }
   );
 
+  const handleImageChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleVideoChange = (e) => {
+    setFile(e.target.files[0]);
+    // Reset video playback when a new video is selected
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
   const handleClick = async (e) => {
     e.preventDefault();
+    setUploading(true);
+    
     let mediaUrl = "";
     if (file) mediaUrl = await upload();
     mutation.mutate({ desc, img: mediaUrl });
     setDesc("");
     setFile(null);
+    setUploadProgress(0); // Reset upload progress
   };
 
   return (
     <div className="share">
       <div className="container">
-        <div className="top">
+        <div className="top d-flex">
           <div className="left">
-          {currentUser.profilePic ? (
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
-          ) : (
-            <img src={Avatar} alt="Default Avatar" />
-          )}
+            {currentUser.profilePic ? (
+              <img src={"/upload/" + currentUser.profilePic} alt="" />
+            ) : (
+              <img src={Avatar} alt="Default Avatar" />
+            )}
             <input
               type="text"
+              id="desc"
               placeholder={`What's on your mind ${currentUser.name}?`}
               onChange={(e) => setDesc(e.target.value)}
               value={desc}
@@ -72,7 +105,7 @@ const Share = () => {
               <img className="file" alt="" src={URL.createObjectURL(file)} />
             )}
             {file && file.type.startsWith("video/") && (
-              <video className="file" controls>
+              <video className="file" ref={videoRef} controls>
                 <source src={URL.createObjectURL(file)} type={file.type} />
               </video>
             )}
@@ -83,28 +116,39 @@ const Share = () => {
           <div className="left">
             <input
               type="file"
-              id="file"
+              id="imageFile"
               style={{ display: "none" }}
-              accept="image/*, video/*"
-              onChange={(e) => setFile(e.target.files[0])}
+              accept="image/*"
+              onChange={handleImageChange}
             />
-            <label htmlFor="file">
+            <label htmlFor="imageFile">
               <div className="item">
                 <img src={Image} alt="" />
-                <span>Add Image/Video</span>
+                <span>Add Image</span>
               </div>
             </label>
-            <div className="item">
-              <img src={Map} alt="" />
-              <span>Add Place</span>
-            </div>
-            <div className="item">
-              <img src={Friend} alt="" />
-              <span>Tag Friends</span>
-            </div>
+            <input
+              type="file"
+              id="videoFile"
+              style={{ display: "none" }}
+              accept="video/*"
+              onChange={handleVideoChange}
+            />
+            <label htmlFor="videoFile">
+              <div className="item">
+                <img src={Video} alt="" />
+                <span>Add Video</span>
+              </div>
+            </label>
           </div>
-          <div className="right ps-2">
-            <button className="btn" onClick={handleClick} type="button">Share</button>
+          <div className="right">
+            <button className="btn" onClick={handleClick} type="button" disabled={uploading}>
+              {uploading ? (
+                <span>Uploading... ({uploadProgress}%)</span>
+              ) : (
+                <span>Share</span>
+              )}
+            </button>
           </div>
         </div>
       </div>

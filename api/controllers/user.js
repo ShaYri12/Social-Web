@@ -144,6 +144,11 @@ export const getOnlineFollowedUsers = (req, res) => {
       // Extract followed user IDs
       const followedUserIds = followingData.map((item) => item.followedUserId);
 
+      // Check if the user is following anyone
+      if (followedUserIds.length === 0) {
+        return res.status(200).json("");
+      }
+
       // Query to get online followed users
       const onlineFollowedQuery = "SELECT * FROM users WHERE id IN (?) AND online = ?";
       db.query(onlineFollowedQuery, [followedUserIds, true], (err, onlineFollowedData) => {
@@ -153,3 +158,4 @@ export const getOnlineFollowedUsers = (req, res) => {
     });
   });
 };
+

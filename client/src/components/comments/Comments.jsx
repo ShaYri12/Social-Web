@@ -63,11 +63,11 @@ const Comments = ({ postId }) => {
               ) : (
                 <img src={Avatar} alt="Default Avatar" />
               )}
-              <div className="info">
-                <span>{comment.name}</span>
+              <div className="info my-auto">
+                <span className="my-auto">{comment.name}</span>
                 <p>{comment.desc}</p>
               </div>
-              <span className="date">
+              <span className="date my-auto">
                 {moment(comment.createdAt).fromNow()}
               </span>
             </div>

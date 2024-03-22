@@ -22,6 +22,7 @@ import Followers from "./pages/followers/Followers";
 import Followings from "./pages/followings/Followings";
 import SearchResult from "./pages/searchResult/SearchResult";
 import { makeRequest } from "./axios";
+import Message from "./pages/message/Message";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -113,6 +114,12 @@ function App() {
           path: "/profile/:id",
           element: <Profile />,
         },
+        
+        {
+          path: "/message",
+          element: <Message />,
+        },
+        
         {
           path: "/followers",
           element: <Followers />,

@@ -90,7 +90,12 @@
             color: white;
             cursor: pointer;
             background-color: #5271ff;
-            border-radius: 3px;
+            border-radius: 7px;
+
+            &:hover{
+              background-color: #385cfb;
+              transition: background-color 0.3s ease;
+            }
           }
         }
       }
