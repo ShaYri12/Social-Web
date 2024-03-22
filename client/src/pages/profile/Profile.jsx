@@ -7,11 +7,10 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import PlaceIcon from "@mui/icons-material/Place";
 import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
@@ -82,16 +81,16 @@ const Profile = () => {
                 <a href="http://facebook.com" target="_blank">
                   <FacebookTwoToneIcon fontSize="medium" />
                 </a>
-                <a href="http://facebook.com" target="_blank">
+                <a href="http://instagram.com" target="_blank">
                   <InstagramIcon fontSize="medium" />
                 </a>
-                <a href="http://facebook.com" target="_blank">
+                <a href="http://twitter.com" target="_blank">
                   <TwitterIcon fontSize="medium" />
                 </a>
-                <a href="http://facebook.com" target="_blank">
+                <a href="http://linkedin.com" target="_blank">
                   <LinkedInIcon fontSize="medium" />
                 </a>
-                <a href="http://facebook.com" target="_blank">
+                <a href="http://pinterest.com" target="_blank">
                   <PinterestIcon fontSize="medium" />
                 </a>
               </div>
@@ -117,10 +116,9 @@ const Profile = () => {
                   </button>
                 )}
               </div>
-              <div className="right">
+              <Link to="/message" className="right">
                 <EmailOutlinedIcon />
-                <MoreVertIcon />
-              </div>
+              </Link>
             </div>
             <Posts userId={userId} />
           </div>

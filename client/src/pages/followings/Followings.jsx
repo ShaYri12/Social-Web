@@ -16,7 +16,7 @@ const Followings = () => {
     const fetchFollowings = async () => {
       try {
         const response = await makeRequest.get("/relationships/following");
-        setFollowings(response.data); // Assuming the response data is an array of followings
+        setFollowings(response.data); 
       } catch (error) {
         console.error("Error fetching followings:", error);
       }

@@ -1,72 +1,35 @@
-import { AddIcon } from "@chakra-ui/icons";
-import { Box, Stack, Text } from "@chakra-ui/layout";
-import { useToast } from "@chakra-ui/toast";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { getSender2 } from "../config/ChatLogics";
+import { useState, useEffect } from "react";
+import { makeRequest } from '../axios';
 import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { Button } from "@chakra-ui/react";
-import { ChatState } from "../context/ChatProvider";
+import { AddIcon } from "@chakra-ui/icons";
+import { Box, Stack, Text } from "@chakra-ui/layout";
+import { getSender2 } from "../config/ChatLogics";
 
 const MyChats = ({ fetchAgain, user }) => {
   const [loggedUser, setLoggedUser] = useState();
-
-  const { selectedChat, setSelectedChat, chats, setChats } = ChatState();
-
-  // const toast = useToast();
+  const [chats, setChats] = useState([]);
+  const [selectedChat, setSelectedChat] = useState(null);
 
   const fetchChats = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-          credentials: 'include', // Include credentials in the request
-        },
-      };
-  
-      const response = await fetch("http://localhost:8800/api/chat", config);
-      if (!response.ok) {
-        throw new Error("Failed to fetch chats");
+      const response = await makeRequest.get('/chat');
+      console.log(response)
+      if (response.status !== 200) {
+        throw new Error('Failed to fetch chats');
       }
-  
-      const data = await response.json();
+      const data = response.data;
       setChats(data);
-      console.log(data); // Log the fetched data directly
+      
     } catch (error) {
-      console.error("Error fetching chats:", error.message);
-      // Update UI or take appropriate actions based on the error
+      console.error('Error fetching chats:', error.message);
     }
   };
-  
-
-  // const fetchChats = async () => {
-  //   let userId = user._id;
-  //   try {
-  //     const config = {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-type": "application/json",
-  //         Authorization: `Bearer ${user.token}`,
-  //       },
-  //       body: JSON.stringify({ userId }),
-  //     };
-  //     const response = await fetch("http://localhost:5000/api/chat/", config);
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-  //     const { data } = await response.json();
-  //     setChats(data);
-  //     console.log(chats);
-  //   } catch (error) {
-  //     console.log("Error Occurred!", error);
-  //   }
-  // };
 
   useEffect(() => {
-    setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
+    setLoggedUser(JSON.parse(localStorage.getItem("user")));
     fetchChats();
-    // eslint-disable-next-line
   }, [fetchAgain]);
 
   return (
@@ -81,7 +44,6 @@ const MyChats = ({ fetchAgain, user }) => {
     >
       <Box className="flex p-4 text-[28px] w-full bg-[#F8F8F8] justify-between items-center">
         <Text className="text-[22px] font-semibold">My Chats</Text>
-
         <GroupChatModal>
           <Button className="flex text-[12px]" rightIcon={<AddIcon />}>
             Group Chat
@@ -89,7 +51,7 @@ const MyChats = ({ fetchAgain, user }) => {
         </GroupChatModal>
       </Box>
       <Box className="flex flex-col p-4 w-full h-full overflow-y-scroll bg-[#F8F8F8]">
-        {chats ? (
+        {chats.length ? (
           <Stack overflowY="scroll">
             {chats.map((chat) => (
               <Box
@@ -97,14 +59,13 @@ const MyChats = ({ fetchAgain, user }) => {
                 className="cursor-pointer px-4 py-2 rounded-lg"
                 bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
                 color={selectedChat === chat ? "white" : "black"}
-                key={chat._id}
+                key={chat.id}
               >
                 <Text>
                   {!chat.isGroupChat
                     ? getSender2(loggedUser, chat.users)
                     : chat.chatName}
                 </Text>
-
                 {chat.latestMessage && (
                   <Text fontSize="xs">
                     <b>{chat.latestMessage.sender.name} : </b>
