@@ -83,13 +83,12 @@ export const getSuggestedUsers = async (req, res) => {
 
     let suggestedUsers = [];
 
-    // Exclude the current user's ID from the suggested users list
+    // Construct the match query to exclude the current user's ID
     const matchQuery = { _id: { $ne: userId } };
 
     if (user.following && user.following.length > 0) {
-      const followedUserIds = user.following;
       // If the user is following others, exclude the followed users from the suggested list as well
-      matchQuery._id.$nin = followedUserIds;
+      matchQuery._id.$nin = user.following;
     }
 
     // Find random users based on the match query
@@ -104,6 +103,7 @@ export const getSuggestedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
 
 
 export const updateOnlineStatus = async (req, res) => {
