@@ -44,6 +44,7 @@ function App() {
     const { currentUser } = useContext(AuthContext);
     const [onlineStatus, setOnlineStatus] = useState(false);
     const userId = currentUser.id;
+<<<<<<< HEAD
 
     const updateUserOnlineStatus = async (userId, onlineStatus) => {
       try {
@@ -72,6 +73,40 @@ function App() {
           "visibilitychange",
           handleVisibilityChange
         );
+=======
+    let updateTimer = null;
+  
+    const updateUserOnlineStatus = async (userId, onlineStatus) => {
+      try {
+        await makeRequest.put(`/users/online`, { online: onlineStatus });
+        console.log('Online status updated successfully');
+      } catch (error) {
+        console.error('Error updating online status:', error);
+      }
+    };
+  
+    const handleVisibilityChange = () => {
+      clearTimeout(updateTimer); // Clear any existing timer
+  
+      if (document.visibilityState === 'visible') {
+        setOnlineStatus(true);
+        updateUserOnlineStatus(userId, true);
+      } else {
+        // Delay the update by 5 seconds when the document is hidden
+        updateTimer = setTimeout(() => {
+          setOnlineStatus(false);
+          updateUserOnlineStatus(userId, false);
+        }, 5000); // Adjust the delay time as needed
+      }
+    };
+  
+    useEffect(() => {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+  
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        clearTimeout(updateTimer); // Clear the timer on component unmount
+>>>>>>> 52fb818349531d79724aa1c7b6246d94fdc30126
       };
     }, [userId]);
 

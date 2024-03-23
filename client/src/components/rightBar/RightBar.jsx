@@ -2,10 +2,11 @@ import "./rightBar.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import CloseIcon from "@mui/icons-material/Close";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { makeRequest } from "../../axios";
 import Avatar from "../../assets/avatar.jpg";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
 
 const RightBar = () => {
   const [suggestedUsers, setSuggestedUsers] = useState([]);
@@ -14,6 +15,8 @@ const RightBar = () => {
   const [onlineFriends, setOnlineFriends] = useState([]); // Initialize as an empty array
   const [onlineFriendsLoading, setOnlineFriendsLoading] = useState(true);
   const [onlineFriendsError, setOnlineFriendsError] = useState(null);
+  const { currentUser } = useContext(AuthContext
+    );
 
   useEffect(() => {
     const fetchOnlineFriends = async () => {
@@ -23,7 +26,8 @@ const RightBar = () => {
           throw new Error("Failed to fetch online friends");
         }
         setOnlineFriends(response.data);
-
+        // Log the updated state inside the callback of setOnlineFriends
+        console.log("onlines: ", response.data);
         setOnlineFriendsLoading(false);
       } catch (error) {
         console.error(error);
@@ -31,9 +35,10 @@ const RightBar = () => {
         setOnlineFriendsLoading(false);
       }
     };
-
+  
     fetchOnlineFriends();
   }, []);
+  
 
   useEffect(() => {
     const fetchSuggestedUsers = async () => {
@@ -42,7 +47,11 @@ const RightBar = () => {
         if (response.status !== 200) {
           throw new Error("Failed to fetch suggested users");
         }
-        setSuggestedUsers(response.data);
+        
+        // Filter out the current user from suggested users
+        const filteredUsers = response.data.filter(user => user._id !== currentUser._id);
+        
+        setSuggestedUsers(filteredUsers);
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -50,9 +59,9 @@ const RightBar = () => {
         setLoading(false);
       }
     };
-
+  
     fetchSuggestedUsers();
-  }, []);
+  }, [currentUser.id]);
 
   const handleFollow = async (followerId) => {
     try {

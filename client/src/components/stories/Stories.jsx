@@ -36,9 +36,9 @@ const Stories = () => {
   const handleUploadClick = async () => {
     if (file) {
       await uploadStory(file);
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 1000);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
   };
 

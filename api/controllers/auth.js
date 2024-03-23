@@ -4,10 +4,12 @@ import User from "../models/userModel.js";
 
 export const register = async (req, res) => {
   try {
-    // Check if user exists
-    const existingUser = await User.findOne({ username: req.body.username });
+    // Check if user exists by username or email
+    const existingUser = await User.findOne({
+      $or: [{ username: req.body.username }, { email: req.body.email }],
+    });
     if (existingUser) {
-      return res.status(409).json("User already exists!");
+      return res.status(409).json("Username or email already exists!");
     }
 
     // Hash the password
@@ -29,6 +31,7 @@ export const register = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
 
 export const login = async (req, res) => {
   try {

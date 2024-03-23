@@ -1,6 +1,11 @@
 import User from "../models/userModel.js";
+import Relationship from "../models/relationshipModel.js";
 import jwt from "jsonwebtoken";
+<<<<<<< HEAD
 import asyncHandler from "express-async-handler";
+=======
+import mongoose from 'mongoose';
+>>>>>>> 52fb818349531d79724aa1c7b6246d94fdc30126
 
 export const getUser = async (req, res) => {
   try {
@@ -67,6 +72,7 @@ export const searchUsers = async (req, res) => {
   }
 };
 
+
 export const getSuggestedUsers = async (req, res) => {
   try {
     const token = req.cookies.accessToken;
@@ -82,20 +88,13 @@ export const getSuggestedUsers = async (req, res) => {
       return res.status(404).json("User not found");
     }
 
-    let suggestedUsers = [];
+    // Find the IDs of followed users
+    const followedUserIds = await Relationship.find({ followerUserId: userId }).distinct('followedUserId');
 
-    // Construct the match query to exclude the current user's ID
-    const matchQuery = { _id: { $ne: userId } };
-
-    if (user.following && user.following.length > 0) {
-      // If the user is following others, exclude the followed users from the suggested list as well
-      matchQuery._id.$nin = user.following;
-    }
-
-    // Find random users based on the match query
-    suggestedUsers = await User.aggregate([
-      { $match: matchQuery },
-      { $sample: { size: 2 } },
+    // Find suggested users who are not followed by the current user
+    let suggestedUsers = await User.aggregate([
+      { $match: { _id: { $nin: followedUserIds }, _id: { $ne: userId } } }, // Exclude followed users and the current user
+      { $sample: { size: 2 } } // Retrieve a random sample of 2 users
     ]);
 
     return res.json(suggestedUsers);
@@ -133,30 +132,35 @@ export const updateOnlineStatus = async (req, res) => {
   }
 };
 
+
 export const getOnlineFollowedUsers = async (req, res) => {
   try {
+    // Verify the user's token to get their ID
     const token = req.cookies.accessToken;
     if (!token) return res.status(401).json("Not authenticated!");
 
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
+    // Retrieve the user document from the database using their ID
     const userId = userInfo.id;
-
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json("User not found");
     }
 
-    const followedUserIds = user.following;
-    if (followedUserIds?.length === 0) {
-      return res.json("");
+    // Extract the IDs of the users being followed by the current user
+    const followedUserIds = await Relationship.find({ followerUserId: userId }).distinct('followedUserId');
+    if (followedUserIds.length === 0) {
+      // If the user is not following anyone, return an empty array
+      return res.json([]);
     }
 
+    // Query the database for online users who are being followed
     const onlineFollowedUsers = await User.find({
       _id: { $in: followedUserIds },
-      online: true,
-    });
+      online: true, // Only retrieve users who are online
+    }).select("id name profilePic online");
 
     return res.json(onlineFollowedUsers);
   } catch (error) {
@@ -165,6 +169,7 @@ export const getOnlineFollowedUsers = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 export const allUsers = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
@@ -182,3 +187,7 @@ export const allUsers = asyncHandler(async (req, res) => {
     res.send("user not found");
   }
 });
+=======
+
+
+>>>>>>> 52fb818349531d79724aa1c7b6246d94fdc30126
