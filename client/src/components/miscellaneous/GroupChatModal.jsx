@@ -47,13 +47,14 @@ const GroupChatModal = ({ children }) => {
 
     try {
       setLoading(true);
+      const { data } = await makeRequest.get(`/users?search=$${search}`);
 
-      const { data } = await axios.get(
-        `http://localhost:8800/api/users?search=${search}`,
-        {
-          credentials: "include",
-        }
-      );
+      // const { data } = await axios.get(
+      //   `http://localhost:8800/api/users?search=${search}`,
+      //   {
+      //     credentials: "include",
+      //   }
+      // );
       console.log(data);
       setLoading(false);
       setSearchResult(data);
@@ -72,28 +73,18 @@ const GroupChatModal = ({ children }) => {
       return;
     }
 
-    // try {
-    const { data } = await makeRequest.post(`/chat`, {
-      name: groupChatName,
-      users: JSON.stringify(selectedUsers.map((u) => u._id)),
-    });
-    // const { data } = await axios.post(
-    //   `http://localhost:8800/api/chat/group`,
-    //   {
-    //     credentials: "include",
-    //   },
-    //   {
-    //     name: groupChatName,
-    //     users: JSON.stringify(selectedUsers.map((u) => u._id)),
-    //   }
-    // );
-    setChats([data, ...chats]);
-    onClose();
-    alert("New Group Chat Created!");
-    // }
-    // catch (error) {
-    //   alert("Failed to Create the Chat!");
-    // }
+    try {
+      const { data } = await makeRequest.post(`/chat/group`, {
+        name: groupChatName,
+        users: JSON.stringify(selectedUsers.map((u) => u._id)),
+      });
+
+      setChats([data, ...chats]);
+      onClose();
+      alert("New Group Chat Created!");
+    } catch (error) {
+      alert("Failed to Create the Chat!");
+    }
   };
 
   return (

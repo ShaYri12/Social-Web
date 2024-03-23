@@ -21,6 +21,7 @@ import { useState } from "react";
 import { ChatState } from "../../context/ChatProvider";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
 import UserListItem from "../userAvatar/UserListItem";
+import { makeRequest } from "../../axios";
 
 const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -42,12 +43,8 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     try {
       setLoading(true);
 
-      const { data } = await axios.get(
-        `http://localhost:8800/api/user?search=${search}`,
-        {
-          credentials: "include",
-        }
-      );
+      const { data } = await makeRequest.get(`/users?search=${search}`);
+
       console.log(data);
       setLoading(false);
       setSearchResult(data);
@@ -70,16 +67,10 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     try {
       setRenameLoading(true);
 
-      const { data } = await axios.put(
-        `http://localhost:8800/api/chat/rename`,
-        {
-          chatId: selectedChat._id,
-          chatName: groupChatName,
-        },
-        {
-          credentials: "include",
-        }
-      );
+      const { data } = await makeRequest.put(`/chat/rename`, {
+        chatId: selectedChat._id,
+        chatName: groupChatName,
+      });
 
       console.log(data._id);
       // setSelectedChat("");
@@ -126,16 +117,10 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     try {
       setLoading(true);
 
-      const { data } = await axios.put(
-        `http://localhost:8800/api/chat/groupadd`,
-        {
-          chatId: selectedChat._id,
-          userId: user1._id,
-        },
-        {
-          credentials: "include",
-        }
-      );
+      const { data } = await makeRequest.put(`/chat/groupadd`, {
+        chatId: selectedChat._id,
+        userId: user1._id,
+      });
 
       setSelectedChat(data);
       setLoading(false);
@@ -169,21 +154,26 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     try {
       setLoading(true);
 
-      const { data } = await axios.put(
-        `http://localhost:8800/api/chat/groupremove`,
-        {
-          chatId: selectedChat._id,
-          userId: user1._id,
-        },
-        {
-          credentials: "include",
-        }
-      );
+      const { data } = await makeRequest.put(`/chat/groupremove`, {
+        chatId: selectedChat._id,
+        userId: user1._id,
+      });
 
+      // const { data } = await axios.put(
+      //   `http://localhost:8800/api/chat/groupremove`,
+      //   {
+      //     chatId: selectedChat._id,
+      //     userId: user1._id,
+      //   },
+      //   {
+      //     credentials: "include",
+      //   }
+      // );
+
+      setLoading(false);
       user1._id === user._id ? setSelectedChat() : setSelectedChat(data);
       setFetchAgain(!fetchAgain);
       fetchMessages();
-      setLoading(false);
     } catch (error) {
       toast({
         title: "Error Occured!",
