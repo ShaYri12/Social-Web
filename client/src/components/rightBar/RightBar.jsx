@@ -15,8 +15,6 @@ const RightBar = () => {
   const [onlineFriendsLoading, setOnlineFriendsLoading] = useState(true);
   const [onlineFriendsError, setOnlineFriendsError] = useState(null);
 
-  console.log("hiiii");
-
   useEffect(() => {
     const fetchOnlineFriends = async () => {
       try {
