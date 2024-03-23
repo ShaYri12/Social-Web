@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import Relationship from "../models/relationshipModel.js";
 import jwt from "jsonwebtoken";
+import mongoose from 'mongoose';
 
 export const getUser = async (req, res) => {
   try {
@@ -67,6 +68,7 @@ export const searchUsers = async (req, res) => {
   }
 };
 
+
 export const getSuggestedUsers = async (req, res) => {
   try {
     const token = req.cookies.accessToken;
@@ -82,20 +84,13 @@ export const getSuggestedUsers = async (req, res) => {
       return res.status(404).json("User not found");
     }
 
-    let suggestedUsers = [];
+    // Find the IDs of followed users
+    const followedUserIds = await Relationship.find({ followerUserId: userId }).distinct('followedUserId');
 
-    // Construct the match query to exclude the current user's ID
-    const matchQuery = { _id: { $ne: userId } };
-
-    if (user.following && user.following.length > 0) {
-      // If the user is following others, exclude the followed users from the suggested list as well
-      matchQuery._id.$nin = user.following;
-    }
-
-    // Find random users based on the match query
-    suggestedUsers = await User.aggregate([
-      { $match: matchQuery },
-      { $sample: { size: 2 } },
+    // Find suggested users who are not followed by the current user
+    let suggestedUsers = await User.aggregate([
+      { $match: { _id: { $nin: followedUserIds }, _id: { $ne: userId } } }, // Exclude followed users and the current user
+      { $sample: { size: 2 } } // Retrieve a random sample of 2 users
     ]);
 
     return res.json(suggestedUsers);
@@ -104,8 +99,6 @@ export const getSuggestedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
-
-
 
 export const updateOnlineStatus = async (req, res) => {
   try {
