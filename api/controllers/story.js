@@ -56,6 +56,7 @@ export const addStory = async (req, res) => {
   try {
     const token = req.cookies.accessToken;
     if (!token) return res.status(401).json("Not logged in!");
+    console.log("Request body:", req.body.name);
 
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
@@ -64,6 +65,7 @@ export const addStory = async (req, res) => {
       img: req.body.img,
       createdAt: moment().toDate(),
       userId: userInfo.id,
+      name: req.body.name,
     });
 
     await newStory.save();
