@@ -98,6 +98,7 @@ export const getFollowers = async (req, res) => {
       return res.status(200).json([]);
     }
 
+
     return res.status(200).json(followers);
   } catch (error) {
     console.error(error);
