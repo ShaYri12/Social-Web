@@ -13,11 +13,11 @@ export const getStories = async (req, res) => {
 
     // Get the IDs of users followed by the current user
     const followedUserIds = await Relationship.distinct("followedUserId", {
-      followerUserId: userInfo.id,
+      followerUserId: userInfo._id,
     });
 
     // Include the current user's ID
-    followedUserIds.push(userInfo.id);
+    followedUserIds.push(userInfo._id);
 
     // Query for stories that match the user IDs and are within the last day
     const stories = await Story.aggregate([
@@ -64,7 +64,7 @@ export const addStory = async (req, res) => {
     const newStory = new Story({
       img: req.body.img,
       createdAt: moment().toDate(),
-      userId: userInfo.id,
+      userId: userInfo._id,
     });
 
     await newStory.save();
@@ -84,8 +84,8 @@ export const deleteStory = async (req, res) => {
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
     const deletedStory = await Story.findOneAndDelete({
-      _id: req.params.id,
-      userId: userInfo.id,
+      _id: req.params._id,
+      userId: userInfo._id,
     });
 
     if (deletedStory) {

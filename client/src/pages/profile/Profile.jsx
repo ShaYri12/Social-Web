@@ -10,7 +10,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import Posts from "../../components/posts/Posts";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import { Link, useLocation } from "react-router-dom";
+import { Link,  useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
@@ -20,8 +20,9 @@ import Cover from '../../assets/cover.png';
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
-  const location = useLocation();
-  const userId = parseInt(location.pathname.split("/")[2]);
+  
+   const { userId } = useParams(); 
+   console.log("userId: ", userId)
 
   useEffect(() => {
     window.scrollTo(0, -1);

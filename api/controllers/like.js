@@ -21,7 +21,7 @@ export const addLike = async (req, res) => {
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
     const newLike = new Like({
-      userId: userInfo.id,
+      userId: userInfo._id,
       postId: req.body.postId,
     });
 
@@ -42,7 +42,7 @@ export const deleteLike = async (req, res) => {
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
     const deletedLike = await Like.findOneAndDelete({
-      userId: userInfo.id,
+      userId: userInfo._id,
       postId: req.query.postId,
     });
 

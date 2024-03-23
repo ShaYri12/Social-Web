@@ -17,8 +17,8 @@ export const getPosts = async (req, res) => {
       query = { userId: userId };
       values = [userId];
     } else {
-      query = { $or: [{ userId: userInfo.id }, { userId: { $in: userInfo.following } }] };
-      values = [userInfo.id];
+      query = { $or: [{ userId: userInfo._id }, { userId: { $in: userInfo.following } }] };
+      values = [userInfo._id];
     }
 
     const posts = await Post.find(query)
@@ -44,7 +44,7 @@ export const addPost = async (req, res) => {
       desc: req.body.desc,
       img: req.body.img,
       createdAt: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-      userId: userInfo.id,
+      userId: userInfo._id,
     });
 
     await newPost.save();
@@ -64,8 +64,8 @@ export const deletePost = async (req, res) => {
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
     const deletedPost = await Post.findOneAndDelete({
-      _id: req.params.id,
-      userId: userInfo.id,
+      _id: req.params._id,
+      userId: userInfo._id,
     });
 
     if (deletedPost) {
