@@ -83,7 +83,7 @@ export const getSuggestedUsers = async (req, res) => {
     }
 
     let suggestedUsers = [];
-    if (user.following.length === 0) {
+    if (user.following?.length === 0) {
       suggestedUsers = await User.aggregate([
         { $match: { _id: { $ne: userId } } },
         { $sample: { size: 2 } },
@@ -147,7 +147,7 @@ export const getOnlineFollowedUsers = async (req, res) => {
     }
 
     const followedUserIds = user.following;
-    if (followedUserIds.length === 0) {
+    if (followedUserIds?.length === 0) {
       return res.json("");
     }
 
