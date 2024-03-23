@@ -1,36 +1,42 @@
 import Post from "../models/postModel.js";
 import jwt from "jsonwebtoken";
+import Relationship from "../models/relationshipModel.js";
 import moment from "moment";
 
 export const getPosts = async (req, res) => {
   try {
-    const userId = req.query.userId;
+    // Verify the user's token to get their ID
     const token = req.cookies.accessToken;
-    if (!token) return res.status(401).json("Not logged in!");
+    if (!token) return res.status(401).json("Not authenticated!");
 
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
-    let query;
-    let values;
-    if (userId !== "undefined") {
-      query = { userId: userId };
-      values = [userId];
+    // Retrieve the user ID from the query parameters or use the user's ID from the token
+    let userId = req.query.userId;
+    if (userId === "undefined") userId = undefined; // Convert "undefined" string to actual undefined
+
+    // Check if userId is undefined or matches the authenticated user's ID
+    if (userId !== undefined) {
+      // If userId is provided,
+      // fetch only the posts of the specified user
+      const posts = await Post.find({ userId }).populate('userId').sort({ createdAt: -1 });
+      return res.json(posts);
     } else {
-      query = { $or: [{ userId: userInfo.id }, { userId: { $in: userInfo.following } }] };
-      values = [userInfo.id];
+      // If userId is undefined,
+      // fetch posts of the authenticated user's followings
+      const followedUserIds = await Relationship.find({ followerUserId: userInfo.id }).distinct('followedUserId');
+      followedUserIds.push(userInfo.id); // Include the authenticated user's ID
+      const posts = await Post.find({ userId: { $in: followedUserIds } }).populate('userId').sort({ createdAt: -1 });
+      return res.json(posts);
     }
-
-    const posts = await Post.find(query)
-      .populate({ path: "userId", select: "id name profilePic" })
-      .sort({ createdAt: -1 });
-
-    return res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     return res.status(500).json(error);
   }
 };
+
+
 
 export const addPost = async (req, res) => {
   try {

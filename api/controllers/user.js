@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import Relationship from "../models/relationshipModel.js";
 import jwt from "jsonwebtoken";
 
 export const getUser = async (req, res) => {
@@ -134,24 +135,25 @@ export const updateOnlineStatus = async (req, res) => {
   }
 };
 
+
 export const getOnlineFollowedUsers = async (req, res) => {
   try {
+    // Verify the user's token to get their ID
     const token = req.cookies.accessToken;
     if (!token) return res.status(401).json("Not authenticated!");
 
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
+    // Retrieve the user document from the database using their ID
     const userId = userInfo.id;
-
-    // Fetch the current user's document from the database
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json("User not found");
     }
 
     // Extract the IDs of the users being followed by the current user
-    const followedUserIds = user.following || [];
+    const followedUserIds = await Relationship.find({ followerUserId: userId }).distinct('followedUserId');
     if (followedUserIds.length === 0) {
       // If the user is not following anyone, return an empty array
       return res.json([]);
@@ -160,12 +162,8 @@ export const getOnlineFollowedUsers = async (req, res) => {
     // Query the database for online users who are being followed
     const onlineFollowedUsers = await User.find({
       _id: { $in: followedUserIds },
-      online: true,
+      online: true, // Only retrieve users who are online
     }).select("id name profilePic online");
-    
-    console.log("userId: ", userId);
-    console.log("followedUserIds: ", followedUserIds);
-    console.log("onlineFollowedUsers: ", onlineFollowedUsers);
 
     return res.json(onlineFollowedUsers);
   } catch (error) {
@@ -173,4 +171,6 @@ export const getOnlineFollowedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
+
 
