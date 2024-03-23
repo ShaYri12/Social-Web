@@ -4,7 +4,7 @@ import { AuthContext } from "../../context/authContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import moment from "moment";
-import Avatar from '../../assets/avatar.jpg';
+import Avatar from "../../assets/avatar.jpg";
 
 const Comments = ({ postId }) => {
   const [desc, setDesc] = useState("");
@@ -58,13 +58,13 @@ const Comments = ({ postId }) => {
         ? "loading"
         : data.map((comment) => (
             <div className="comment" key={comment._id}>
-              {comment.profilePic ? (
-                <img src={"/upload/" + comment.profilePic} alt="" />
+              {comment.userId.profilePic ? (
+                <img src={"/upload/" + comment.userId.profilePic} alt="" />
               ) : (
                 <img src={Avatar} alt="Default Avatar" />
               )}
               <div className="info my-auto">
-                <span className="my-auto">{comment.name}</span>
+                <span className="my-auto">{comment.userId.name}</span>
                 <p>{comment.desc}</p>
               </div>
               <span className="date my-auto">

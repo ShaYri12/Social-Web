@@ -16,7 +16,7 @@ const Update = ({ setOpenUpdate, user }) => {
   });
 
   const upload = async (file) => {
-    console.log(file)
+    console.log(file);
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -28,14 +28,14 @@ const Update = ({ setOpenUpdate, user }) => {
   };
 
   const handleChange = (e) => {
-    setTexts((prev) => ({ ...prev, [e.target.name]: [e.target.value] }));
+    setTexts((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
-    (user) => {
-      return makeRequest.put("/users", user);
+    (texts) => {
+      return makeRequest.put("/users", texts);
     },
     {
       onSuccess: () => {
@@ -49,13 +49,17 @@ const Update = ({ setOpenUpdate, user }) => {
     e.preventDefault();
 
     // TODO: find a better way to get image URL
-    
+
     let coverUrl;
     let profileUrl;
     coverUrl = cover ? await upload(cover) : user.coverPic;
     profileUrl = profile ? await upload(profile) : user.profilePic;
-    
-    const updatedUserData = { ...texts, coverPic: coverUrl, profilePic: profileUrl };
+
+    const updatedUserData = {
+      ...texts,
+      coverPic: coverUrl,
+      profilePic: profileUrl,
+    };
 
     mutation.mutate(updatedUserData);
     setOpenUpdate(false);
@@ -66,9 +70,9 @@ const Update = ({ setOpenUpdate, user }) => {
     const localStorageUser = JSON.parse(localStorage.getItem("user")) || {};
     const updatedLocalStorageUser = { ...localStorageUser, ...updatedUserData };
     localStorage.setItem("user", JSON.stringify(updatedLocalStorageUser));
-    window.location.reload();
+    // window.location.reload();
   };
-  
+
   return (
     <div className="update">
       <div className="wrapper">
@@ -153,7 +157,10 @@ const Update = ({ setOpenUpdate, user }) => {
           />
           <button onClick={handleClick}>Update</button>
         </form>
-        <button className="close btn btn-danger" onClick={() => setOpenUpdate(false)}>
+        <button
+          className="close btn btn-danger"
+          onClick={() => setOpenUpdate(false)}
+        >
           close
         </button>
       </div>

@@ -1,10 +1,10 @@
 import "./rightBar.scss";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import CloseIcon from '@mui/icons-material/Close';
+import "bootstrap/dist/css/bootstrap.min.css";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
-import { makeRequest } from '../../axios'
-import Avatar from '../../assets/avatar.jpg'
+import { makeRequest } from "../../axios";
+import Avatar from "../../assets/avatar.jpg";
 import { Link } from "react-router-dom";
 
 const RightBar = () => {
@@ -14,6 +14,7 @@ const RightBar = () => {
   const [onlineFriends, setOnlineFriends] = useState([]); // Initialize as an empty array
   const [onlineFriendsLoading, setOnlineFriendsLoading] = useState(true);
   const [onlineFriendsError, setOnlineFriendsError] = useState(null);
+
   useEffect(() => {
     const fetchOnlineFriends = async () => {
       try {
@@ -22,6 +23,7 @@ const RightBar = () => {
           throw new Error("Failed to fetch online friends");
         }
         setOnlineFriends(response.data);
+        console.log(response.data);
         setOnlineFriendsLoading(false);
       } catch (error) {
         console.error(error);
@@ -48,17 +50,21 @@ const RightBar = () => {
         setLoading(false);
       }
     };
-  
+
     fetchSuggestedUsers();
   }, []);
-  
+
   const handleFollow = async (followerId) => {
     try {
-      const response = await makeRequest.post("/relationships", { userId: followerId });
+      const response = await makeRequest.post("/relationships", {
+        userId: followerId,
+      });
       if (response.status !== 200) {
         throw new Error("Failed to follow");
       }
-      setSuggestedUsers(suggestedUsers.filter(user => user._id !== followerId));
+      setSuggestedUsers(
+        suggestedUsers.filter((user) => user._id !== followerId)
+      );
     } catch (error) {
       console.error("Error toggling follow:", error);
     }
@@ -66,7 +72,7 @@ const RightBar = () => {
 
   const handleDismiss = (userId) => {
     // Remove the dismissed user from suggestions
-    setSuggestedUsers(suggestedUsers.filter(user => user._id !== userId));
+    setSuggestedUsers(suggestedUsers.filter((user) => user._id !== userId));
   };
 
   return (
@@ -78,39 +84,67 @@ const RightBar = () => {
             <span>Suggestions For You</span>
             {loading && <span className="d-block pt-3">Loading...</span>}
             {error && <span className="d-block pt-3">{error}</span>}
-            {!loading && !error && suggestedUsers && suggestedUsers.length > 0 ? (
+            {!loading &&
+            !error &&
+            suggestedUsers &&
+            suggestedUsers.length > 0 ? (
               suggestedUsers.map((user) => (
                 <div className="user" key={user._id}>
                   <Link to={`/profile/${user._id}`} className="userInfo">
                     <img
                       className="img-fluid"
-                      src={user.profilePic ? "/upload/" + user.profilePic : Avatar}
+                      src={
+                        user.profilePic ? "/upload/" + user.profilePic : Avatar
+                      }
                       alt={user.username}
                     />
                     <span>{user.name}</span>
                   </Link>
                   <div className="buttons">
-                    <button className="btn btn-follow" type="button" onClick={() => handleFollow(user._id)}><PersonAddIcon/></button>
-                    <button className="btn btn-dismiss" type="button" onClick={() => handleDismiss(user._id)}><CloseIcon/></button>
-                  </div>          
+                    <button
+                      className="btn btn-follow"
+                      type="button"
+                      onClick={() => handleFollow(user._id)}
+                    >
+                      <PersonAddIcon />
+                    </button>
+                    <button
+                      className="btn btn-dismiss"
+                      type="button"
+                      onClick={() => handleDismiss(user._id)}
+                    >
+                      <CloseIcon />
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (
               <span className="d-block pt-3">No suggestions available</span>
             )}
           </div>
-          
+
           <div className="item">
             <span>Online Friends</span>
-            {onlineFriendsLoading && <span className="d-block pt-3">Loading...</span>}
-            {onlineFriendsError && <span className="d-block pt-3">{onlineFriendsError}</span>}
-            {!onlineFriendsLoading && !onlineFriendsError && onlineFriends && onlineFriends.length > 0 ? (
+            {onlineFriendsLoading && (
+              <span className="d-block pt-3">Loading...</span>
+            )}
+            {onlineFriendsError && (
+              <span className="d-block pt-3">{onlineFriendsError}</span>
+            )}
+            {!onlineFriendsLoading &&
+            !onlineFriendsError &&
+            onlineFriends &&
+            onlineFriends.length > 0 ? (
               onlineFriends.map((friend) => (
                 <div className="user" key={friend._id}>
                   <Link to={`/profile/${friend._id}`} className="userInfo">
                     <img
                       className="img-fluid"
-                      src={friend.profilePic ? "/upload/" + friend.profilePic : Avatar}
+                      src={
+                        friend.profilePic
+                          ? "/upload/" + friend.profilePic
+                          : Avatar
+                      }
                       alt={friend.username}
                     />
                     <div className="online" />

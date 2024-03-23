@@ -12,8 +12,8 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
-import Avatar from '../../assets/avatar.jpg';
-import {toast} from 'react-toastify'
+import Avatar from "../../assets/avatar.jpg";
+import { toast } from "react-toastify";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -58,8 +58,8 @@ const Post = ({ post }) => {
   };
 
   const handleDelete = () => {
-    deleteMutation.mutate(post.id);
-    toast.success("Post Deleted Successfull")
+    deleteMutation.mutate(post._id);
+    toast.success("Post Deleted Successfull");
   };
 
   return (
@@ -67,37 +67,38 @@ const Post = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            {post.profilePic ? (
-              <img src={"/upload/"+post.profilePic} alt="" />
+            {post.userId.profilePic ? (
+              <img src={"/upload/" + post.userId.profilePic} alt="" />
             ) : (
               <img src={Avatar} alt="Default Avatar" />
             )}
             <div className="details">
               <Link
-                to={`/profile/${post.userId}`}
+                to={`/profile/${post.userId._id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <span className="name">{post.name}</span>
+                <span className="name">{post.userId.name}</span>
               </Link>
               <span className="date">{moment(post.createdAt).fromNow()}</span>
             </div>
           </div>
           <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
-          {menuOpen && post.userId === currentUser._id && (
-            <button className="btn" onClick={handleDelete}>delete</button>
+          {menuOpen && post.userId._id === currentUser._id && (
+            <button className="btn" onClick={handleDelete}>
+              delete
+            </button>
           )}
         </div>
         <div className="content">
           <p>{post.desc}</p>
-          {post.img && ( 
-            post.img.endsWith(".mp4") ? ( 
+          {post.img &&
+            (post.img.endsWith(".mp4") ? (
               <video className="media" controls>
                 <source src={"/upload/" + post.img} type="video/mp4" />
               </video>
             ) : (
               <img className="media" src={"/upload/" + post.img} alt="" />
-            )
-          )}
+            ))}
         </div>
         <div className="info">
           <div className="item">
@@ -117,10 +118,10 @@ const Post = ({ post }) => {
             <TextsmsOutlinedIcon />
             See Comments
           </div>
-          <div className="item">
+          {/* <div className="item">
             <ShareOutlinedIcon />
             Share
-          </div>
+          </div> */}
         </div>
         {commentOpen && <Comments postId={post._id} />}
       </div>

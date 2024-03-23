@@ -15,7 +15,6 @@ export const getUser = async (req, res) => {
   }
 };
 
-
 export const updateUser = async (req, res) => {
   try {
     const token = req.cookies.accessToken;
@@ -63,7 +62,7 @@ export const searchUsers = async (req, res) => {
     return res.json(users);
   } catch (error) {
     console.error(error);
-    return res.status(500).json("Internal Server Error: ",error);
+    return res.status(500).json("Internal Server Error: ", error);
   }
 };
 
@@ -102,7 +101,6 @@ export const getSuggestedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
-
 
 export const updateOnlineStatus = async (req, res) => {
   try {
