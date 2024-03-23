@@ -82,18 +82,21 @@ export const getSuggestedUsers = async (req, res) => {
     }
 
     let suggestedUsers = [];
-    if (!user.following || user.following.length === 0) {
-      suggestedUsers = await User.aggregate([
-        { $match: { _id: { $ne: userId } } },
-        { $sample: { size: 2 } },
-      ]);
-    } else {
+
+    // Exclude the current user's ID from the suggested users list
+    const matchQuery = { _id: { $ne: userId } };
+
+    if (user.following && user.following.length > 0) {
       const followedUserIds = user.following;
-      suggestedUsers = await User.aggregate([
-        { $match: { _id: { $nin: followedUserIds.concat(userId) } } },
-        { $sample: { size: 2 } },
-      ]);
+      // If the user is following others, exclude the followed users from the suggested list as well
+      matchQuery._id.$nin = followedUserIds;
     }
+
+    // Find random users based on the match query
+    suggestedUsers = await User.aggregate([
+      { $match: matchQuery },
+      { $sample: { size: 2 } },
+    ]);
 
     return res.json(suggestedUsers);
   } catch (error) {
@@ -101,6 +104,7 @@ export const getSuggestedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
 
 export const updateOnlineStatus = async (req, res) => {
   try {
