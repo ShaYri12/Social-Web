@@ -60,31 +60,28 @@ const SideDrawer = () => {
   const accessChat = async (userId) => {
     try {
       setLoadingChat(true);
-      const config = {
-        // method: "POST",
-        body: JSON.stringify({ userId }),
-      };
 
+      // Make the request to the server
       const response = await makeRequest.post(`/chat`, { userId });
-      // const response = await fetch("http://localhost:8800/api/chat/", config, {
-      //   credentials: "include",
-      // });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+
+      // Check if the response status is within the success range
+      if (response.status >= 200 && response.status < 300) {
+        // If successful, update the selected chat and close the drawer
+        setSelectedChat(response.data);
+        console.log("selectedChat: ", selectedChat);
+        onClose();
+      } else {
+        // If not successful, throw an error
+        throw new Error(`Network response was not ok. Status: ${response.status}`);
       }
 
-      const data = await response.json();
-
-      // if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
-
-      setSelectedChat(data);
-      console.log(selectedChat);
       setLoadingChat(false);
-      onClose();
     } catch (error) {
+      // Catch and handle any errors that occur during the request
       console.log("Error fetching the chat:", error);
     }
-  };
+};
+
 
   return (
     <div>

@@ -14,6 +14,8 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../context/ChatProvider";
+import { makeRequest } from "../axios";
+
 const ENDPOINT = "http://localhost:8800";
 var socket, selectedChatCompare;
 
@@ -37,56 +39,48 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
 
-  const fetchMessages = async () => {
-    if (!selectedChat) return;
-
-    try {
-      setLoading(true);
-
-      const { data } = await axios.get(
-        `http://localhost:8800/api/message/${selectedChat._id}`,
-        {
-          credentials: "include",
-        }
-      );
-      setMessages(data);
-      setLoading(false);
-
-      socket.emit("join chat", selectedChat._id);
-    } catch (error) {
-      console.log("Error Occured!");
-    }
-  };
-
-  const sendMessage = async (event) => {
-    if (event.key === "Enter" && newMessage) {
-      socket.emit("stop typing", selectedChat._id);
+    const fetchMessages = async () => {
+      if (!selectedChat) return;
+    
       try {
-        setNewMessage("");
-        const { data } = await axios.post(
-          "http://localhost:8800/api/message",
-          {
-            content: newMessage,
-            chatId: selectedChat,
-          },
-          {
-            credentials: "include",
-          }
-        );
-        socket.emit("new message", data);
-        setMessages([...messages, data]);
-      } catch (error) {
-        toast({
-          title: "Error Occured!",
-          description: "Failed to send the Message",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom",
+        setLoading(true);
+    
+        const response = await makeRequest.get(`/message/${selectedChat._id}`, {
+          withCredentials: true, // Ensure credentials are included
         });
+    
+        const data = response.data;
+        setMessages(data);
+        setLoading(false);
+    
+        socket.emit("join chat", selectedChat._id);
+      } catch (error) {
+        console.log("Error Occured!", error);
       }
-    }
-  };
+    };
+
+    const sendMessage = async (event) => {
+      if (event.key === "Enter" && newMessage) {
+        socket.emit("stop typing", selectedChat._id);
+        try {
+          setNewMessage("");
+          const response = await makeRequest.post(
+            "/message",
+            {
+              content: newMessage,
+              chatId: selectedChat._id, // Make sure to access the chat ID properly
+            }
+          );
+          const data = response.data;
+          socket.emit("new message", data);
+          setMessages([...messages, data]);
+        } catch (error) {
+          console.error("Error occurred while sending message:", error);
+          // Handle the error as needed, e.g., show a toast notification
+        }
+      }
+    };
+    
 
   useEffect(() => {
     socket = io(ENDPOINT);

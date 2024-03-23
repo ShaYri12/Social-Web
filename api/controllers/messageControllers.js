@@ -20,9 +20,8 @@ const allMessages = asyncHandler(async (req, res) => {
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chatId } = req.body;
 
-  if (!content || !chatId) {
-    console.log("Invalid data passed into request");
-    return res.sendStatus(400);
+  if (!req.user || !req.user._id || !content || !chatId) {
+    return res.status(400).json({ error: "Invalid data passed into request" });
   }
 
   try {
@@ -56,8 +55,9 @@ const sendMessage = asyncHandler(async (req, res) => {
     res.json(message);
   } catch (error) {
     console.error("Error sending message:", error);
-    res.status(400).send(error.message);
+    res.status(400).json({ error: error.message });
   }
 });
+
 
 export { allMessages, sendMessage };
