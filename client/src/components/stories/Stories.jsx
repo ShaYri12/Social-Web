@@ -68,7 +68,6 @@ const Stories = () => {
   const { isLoading, error, data } = useQuery(["stories"], () =>
     makeRequest.get("/stories").then((res) => res.data)
   );
-  console.log("story", stories);
 
   useEffect(() => {
     if (data && data.length > 0) {

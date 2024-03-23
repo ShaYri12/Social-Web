@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import asyncHandler from "express-async-handler";
 
 export const getUser = async (req, res) => {
   try {
@@ -104,8 +105,6 @@ export const getSuggestedUsers = async (req, res) => {
   }
 };
 
-
-
 export const updateOnlineStatus = async (req, res) => {
   try {
     const token = req.cookies.accessToken;
@@ -165,3 +164,21 @@ export const getOnlineFollowedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
+export const allUsers = asyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const users = await User.find(keyword);
+  res.send(users);
+
+  if (!user) {
+    res.send("user not found");
+  }
+});
