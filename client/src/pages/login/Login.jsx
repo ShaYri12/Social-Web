@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import "./login.scss";
-import {toast} from "react-toastify"
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [inputs, setInputs] = useState({
@@ -11,7 +11,7 @@ const Login = () => {
   });
   const [err, setErr] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
