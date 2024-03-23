@@ -1,7 +1,11 @@
 import User from "../models/userModel.js";
 import Relationship from "../models/relationshipModel.js";
 import jwt from "jsonwebtoken";
+<<<<<<< HEAD
+import asyncHandler from "express-async-handler";
+=======
 import mongoose from 'mongoose';
+>>>>>>> 52fb818349531d79724aa1c7b6246d94fdc30126
 
 export const getUser = async (req, res) => {
   try {
@@ -166,5 +170,25 @@ export const getOnlineFollowedUsers = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
+export const allUsers = asyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const users = await User.find(keyword);
+  res.send(users);
+
+  if (!user) {
+    res.send("user not found");
+  }
+});
+=======
 
 
+>>>>>>> 52fb818349531d79724aa1c7b6246d94fdc30126
