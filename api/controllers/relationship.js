@@ -21,7 +21,7 @@ export const addRelationship = async (req, res) => {
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
     const newRelationship = new Relationship({
-      followerUserId: userInfo._id,
+      followerUserId: userInfo.id,
       followedUserId: req.body.userId
     });
 
@@ -42,7 +42,7 @@ export const deleteRelationship = async (req, res) => {
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
     const deletedRelationship = await Relationship.findOneAndDelete({
-      followerUserId: userInfo._id,
+      followerUserId: userInfo.id,
       followedUserId: req.query.userId
     });
 
@@ -65,7 +65,7 @@ export const getFollowings = async (req, res) => {
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
-    const followings = await Relationship.find({ followerUserId: userInfo._id })
+    const followings = await Relationship.find({ followerUserId: userInfo.id })
       .populate({ path: "followedUserId", select: "id name profilePic online" })
       .sort({ name: 1 });
 
@@ -89,7 +89,7 @@ export const getFollowers = async (req, res) => {
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
-    const followers = await Relationship.find({ followedUserId: userInfo._id })
+    const followers = await Relationship.find({ followedUserId: userInfo.id })
       .populate({ path: "followerUserId", select: "id name profilePic online" })
       .sort({ name: 1 });
 

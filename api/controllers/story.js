@@ -13,17 +13,20 @@ export const getStories = async (req, res) => {
 
     // Get the IDs of users followed by the current user
     const followedUserIds = await Relationship.distinct("followedUserId", {
-      followerUserId: userInfo._id,
+      followerUserId: userInfo.id,
     });
-
-    // Include the current user's ID
-    followedUserIds.push(userInfo._id);
+    
+    // Include the current user's ID in the list of followed user IDs
+    followedUserIds.push(userInfo.id);
 
     // Query for stories that match the user IDs and are within the last day
     const stories = await Story.aggregate([
       {
         $match: {
-          userId: { $in: followedUserIds },
+          $or: [
+            { userId: { $in: followedUserIds } }, // Stories from followed users
+            { userId: userInfo.id }, // Your own stories
+          ],
           createdAt: { $gte: moment().subtract(1, "day").toDate() },
         },
       },
@@ -40,17 +43,13 @@ export const getStories = async (req, res) => {
       },
     ]);
 
-    // Check if no stories are found
-    if (stories.length === 0) {
-      return res.status(404).json("No stories found for the user or their followings");
-    }
-
     return res.status(200).json(stories);
   } catch (error) {
     console.error(error);
     return res.status(500).json(error);
   }
 };
+
 
 
 export const addStory = async (req, res) => {
@@ -64,7 +63,7 @@ export const addStory = async (req, res) => {
     const newStory = new Story({
       img: req.body.img,
       createdAt: moment().toDate(),
-      userId: userInfo._id,
+      userId: userInfo.id,
     });
 
     await newStory.save();
@@ -84,8 +83,8 @@ export const deleteStory = async (req, res) => {
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
     const deletedStory = await Story.findOneAndDelete({
-      _id: req.params._id,
-      userId: userInfo._id,
+      _id: req.params.id,
+      userId: userInfo.id,
     });
 
     if (deletedStory) {

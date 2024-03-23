@@ -24,7 +24,7 @@ export const updateUser = async (req, res) => {
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
-    const userId = userInfo._id;
+    const userId = userInfo.id;
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
@@ -75,7 +75,7 @@ export const getSuggestedUsers = async (req, res) => {
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
-    const userId = userInfo._id;
+    const userId = userInfo.id;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -111,7 +111,7 @@ export const updateOnlineStatus = async (req, res) => {
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
-    const userId = userInfo._id;
+    const userId = userInfo.id;
     const { online } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -139,7 +139,7 @@ export const getOnlineFollowedUsers = async (req, res) => {
     const userInfo = jwt.verify(token, "secretkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
-    const userId = userInfo._id;
+    const userId = userInfo.id;
 
     const user = await User.findById(userId);
     if (!user) {

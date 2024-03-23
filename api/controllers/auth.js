@@ -45,7 +45,7 @@ export const login = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user._id }, "secretkey");
+    const token = jwt.sign({ id: user.id }, "secretkey");
 
     // Exclude password from response
     const { password, ...others } = user.toObject();

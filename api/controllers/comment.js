@@ -26,7 +26,7 @@ export const addComment = async (req, res) => {
     const newComment = new Comment({
       desc: req.body.desc,
       createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
-      userId: userInfo._id,
+      userId: userInfo.id,
       postId: req.body.postId,
     });
 
@@ -46,10 +46,10 @@ export const deleteComment = async (req, res) => {
     const userInfo = jwt.verify(token, "jwtkey");
     if (!userInfo) return res.status(403).json("Token is not valid!");
 
-    const commentId = req.params._id;
+    const commentId = req.params.id;
     const deletedComment = await Comment.findOneAndDelete({
       _id: commentId,
-      userId: userInfo._id,
+      userId: userInfo.id,
     });
 
     if (deletedComment) {
