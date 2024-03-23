@@ -23,7 +23,8 @@ const RightBar = () => {
           throw new Error("Failed to fetch online friends");
         }
         setOnlineFriends(response.data);
-
+        // Log the updated state inside the callback of setOnlineFriends
+        console.log("onlines: ", response.data);
         setOnlineFriendsLoading(false);
       } catch (error) {
         console.error(error);
@@ -31,9 +32,10 @@ const RightBar = () => {
         setOnlineFriendsLoading(false);
       }
     };
-
+  
     fetchOnlineFriends();
   }, []);
+  
 
   useEffect(() => {
     const fetchSuggestedUsers = async () => {

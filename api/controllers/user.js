@@ -144,20 +144,28 @@ export const getOnlineFollowedUsers = async (req, res) => {
 
     const userId = userInfo.id;
 
+    // Fetch the current user's document from the database
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json("User not found");
     }
 
-    const followedUserIds = user.following;
-    if (followedUserIds?.length === 0) {
-      return res.json("");
+    // Extract the IDs of the users being followed by the current user
+    const followedUserIds = user.following || [];
+    if (followedUserIds.length === 0) {
+      // If the user is not following anyone, return an empty array
+      return res.json([]);
     }
 
+    // Query the database for online users who are being followed
     const onlineFollowedUsers = await User.find({
       _id: { $in: followedUserIds },
       online: true,
-    });
+    }).select("id name profilePic online");
+    
+    console.log("userId: ", userId);
+    console.log("followedUserIds: ", followedUserIds);
+    console.log("onlineFollowedUsers: ", onlineFollowedUsers);
 
     return res.json(onlineFollowedUsers);
   } catch (error) {
@@ -165,3 +173,4 @@ export const getOnlineFollowedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+

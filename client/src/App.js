@@ -42,36 +42,43 @@ function App() {
   
 
   const Layout = () => {
-  const { currentUser } = useContext(AuthContext);
-  const [onlineStatus, setOnlineStatus] = useState(false);
-  const userId = currentUser.id;
-
-  const updateUserOnlineStatus = async (userId, onlineStatus) => {
-    try {
-      await makeRequest.put(`/users/online`, { online: onlineStatus });
-      console.log('Online status updated successfully');
-    } catch (error) {
-      console.error('Error updating online status:', error);
-    }
-  };
-
-  useEffect(() => {
+    const { currentUser } = useContext(AuthContext);
+    const [onlineStatus, setOnlineStatus] = useState(false);
+    const userId = currentUser.id;
+    let updateTimer = null;
+  
+    const updateUserOnlineStatus = async (userId, onlineStatus) => {
+      try {
+        await makeRequest.put(`/users/online`, { online: onlineStatus });
+        console.log('Online status updated successfully');
+      } catch (error) {
+        console.error('Error updating online status:', error);
+      }
+    };
+  
     const handleVisibilityChange = () => {
+      clearTimeout(updateTimer); // Clear any existing timer
+  
       if (document.visibilityState === 'visible') {
         setOnlineStatus(true);
         updateUserOnlineStatus(userId, true);
       } else {
-        setOnlineStatus(false);
-        updateUserOnlineStatus(userId, false);
+        // Delay the update by 5 seconds when the document is hidden
+        updateTimer = setTimeout(() => {
+          setOnlineStatus(false);
+          updateUserOnlineStatus(userId, false);
+        }, 5000); // Adjust the delay time as needed
       }
     };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [userId]);
+  
+    useEffect(() => {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+  
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        clearTimeout(updateTimer); // Clear the timer on component unmount
+      };
+    }, [userId]);
 
     return (
       <QueryClientProvider client={queryClient}>

@@ -36,9 +36,9 @@ const Stories = () => {
   const handleUploadClick = async () => {
     if (file) {
       await uploadStory(file);
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 1000);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
   };
 
@@ -68,7 +68,6 @@ const Stories = () => {
   const { isLoading, error, data } = useQuery(["stories"], () =>
     makeRequest.get("/stories").then((res) => res.data)
   );
-  console.log("story", stories);
 
   useEffect(() => {
     if (data && data.length > 0) {
