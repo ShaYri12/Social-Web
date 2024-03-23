@@ -1,9 +1,7 @@
 import User from "../models/userModel.js";
 import Relationship from "../models/relationshipModel.js";
 import jwt from "jsonwebtoken";
-
 import asyncHandler from "express-async-handler";
-
 import mongoose from 'mongoose';
 
 export const getUser = async (req, res) => {
