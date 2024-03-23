@@ -33,10 +33,10 @@ const sendMessage = asyncHandler(async (req, res) => {
     });
 
     // Populate sender field with name and pic
-    message = await message.populate("sender", "name pic").execPopulate();
+    message = await message.populate("sender", "name pic");
 
     // Populate chat field
-    message = await message.populate("chat").execPopulate();
+    message = await message.populate("chat");
 
     // Ensure chat field is populated before further population
     if (!message.chat || !message.chat.users) {
@@ -58,6 +58,5 @@ const sendMessage = asyncHandler(async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
 
 export { allMessages, sendMessage };
