@@ -89,7 +89,7 @@ export const getSuggestedUsers = async (req, res) => {
 
     // Find suggested users who are not followed by the current user
     let suggestedUsers = await User.aggregate([
-      { $match: { _id: { $nin: followedUserIds }, _id: { $ne: userId } } }, // Exclude followed users and the current user
+      { $match: { $and: [ { _id: { $nin: followedUserIds } }, { _id: { $ne: userId } } ] } }, // Exclude followed users and the current user
       { $sample: { size: 2 } } // Retrieve a random sample of 2 users
     ]);
 
@@ -99,6 +99,7 @@ export const getSuggestedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
 
 export const updateOnlineStatus = async (req, res) => {
   try {
