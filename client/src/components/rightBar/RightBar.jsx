@@ -23,7 +23,7 @@ const RightBar = () => {
           throw new Error("Failed to fetch online friends");
         }
         setOnlineFriends(response.data);
-        console.log(response.data);
+
         setOnlineFriendsLoading(false);
       } catch (error) {
         console.error(error);

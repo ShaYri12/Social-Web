@@ -52,30 +52,30 @@ const Followings = () => {
       </div>
       {followings.map((following) => (
         <div
-          key={following._id}
+          key={following?.followedUserId?._id}
           className="follwing rounded-4 my-2 p-2 d-flex justify-content-between align-items-center"
         >
           <Link
-            to={`/profile/${following.followedUserId._id}`}
+            to={`/profile/${following?.followedUserId?._id}`}
             className="d-flex gap-3 uinfo"
           >
             <img
               className="img-fluid rounded-circle profile-img"
               src={
-                following.followedUserId.profilePic
-                  ? "/upload/" + following.followedUserId.profilePic
+                following?.followedUserId?.profilePic
+                  ? "/upload/" + following?.followedUserId?.profilePic
                   : Avatar
               }
               alt=""
             />
-            {following.followedUserId.online === 1 && (
+            {following?.followedUserId?.online === 1 && (
               <div className="online" />
             )}
-            <h5 className="my-auto">{following.followedUserId.name}</h5>
+            <h5 className="my-auto">{following?.followedUserId?.name}</h5>
           </Link>
           <button
             className="btn btn-primary btn-unfollow"
-            onClick={() => handleUnfollow(following.followedUserId._id)}
+            onClick={() => handleUnfollow(following?.followedUserId?._id)}
           >
             Unfollow
           </button>

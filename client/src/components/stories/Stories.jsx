@@ -3,10 +3,9 @@ import "./stories.scss";
 import { AuthContext } from "../../context/authContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import Avatar from '../../assets/avatar.jpg';
-import Story from 'react-insta-stories';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-
+import Avatar from "../../assets/avatar.jpg";
+import Story from "react-insta-stories";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 const Stories = () => {
   const { currentUser } = useContext(AuthContext);
@@ -17,13 +16,10 @@ const Stories = () => {
   const [currentStoryId, setCurrentStoryId] = useState(null);
   const [file, setFile] = useState(null);
 
-  
-
   const mutation = useMutation(
     (newStory) => makeRequest.post("/stories", newStory),
     {
       onSuccess: () => {
-
         setStories([]);
       },
       onError: (error) => {
@@ -55,7 +51,6 @@ const Stories = () => {
         timeout: 60000, // 60 seconds
         validateStatus: (status) => status >= 200 && status < 500,
       });
-      console.log(res)
       const imgUrl = res.data;
       const newStory = {
         img: imgUrl,
@@ -72,11 +67,12 @@ const Stories = () => {
   const { isLoading, error, data } = useQuery(["stories"], () =>
     makeRequest.get("/stories").then((res) => res.data)
   );
+  console.log("story", stories);
 
   useEffect(() => {
     if (data && data.length > 0) {
       const groupedStories = {};
-      data.forEach(story => {
+      data.forEach((story) => {
         if (!(story.userId in groupedStories)) {
           groupedStories[story.userId] = [];
         }
@@ -84,7 +80,7 @@ const Stories = () => {
           url: "/upload/" + story.img,
           name: story.name,
           userId: story.userId,
-          storyId: story._id
+          storyId: story._id,
         });
       });
       setStories(groupedStories);
@@ -112,7 +108,7 @@ const Stories = () => {
       handleCloseModal();
     }
   };
-  
+
   const handlePreviousStory = () => {
     if (currentStoryIndex > 0) {
       const prevIndex = currentStoryIndex - 1;
@@ -120,8 +116,6 @@ const Stories = () => {
       setCurrentStoryId(stories[currentUserId][prevIndex]?.storyId);
     }
   };
-  
-  
 
   const handleClickOutsideModal = (e) => {
     if (!e.target.closest(".modal-content") && !e.target.closest(".stories")) {
@@ -150,10 +144,10 @@ const Stories = () => {
           setStories((prevStories) => {
             const updatedStories = { ...prevStories };
             if (updatedStories[currentUserId]) {
-              updatedStories[currentUserId] = updatedStories[currentUserId].filter(
-                (story) => story.storyId !== storyId
-              );
-  
+              updatedStories[currentUserId] = updatedStories[
+                currentUserId
+              ].filter((story) => story.storyId !== storyId);
+
               // Check if the current story index needs adjustment
               if (currentStoryIndex >= updatedStories[currentUserId].length) {
                 handleCloseModal(); // Close the modal if the current story is deleted
@@ -168,8 +162,6 @@ const Stories = () => {
       console.error("Error deleting story:", error);
     }
   };
-  
-  
 
   useEffect(() => {
     if (isModalOpen) {
@@ -183,33 +175,36 @@ const Stories = () => {
     };
   }, [isModalOpen]);
 
-  
   return (
     <>
-      <h3 className="stories-heading" >Stories</h3>
+      <h3 className="stories-heading">Stories</h3>
       <div className="stories">
-      <div className="my-story">
-        <label htmlFor="fileInput" className="story">
-          {currentUser.profilePic ? (
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
-          ) : (
-            <img src={Avatar} alt="Default Avatar" />
-          )}
-          <span>{currentUser.name}</span>
-          {file ? ( // Render "upload" text if file is selected
-            <button onClick={handleUploadClick} className="upload-btn btn btn-primary mx-auto">Upload
-            </button>
-          ) : (
-            <div>+</div>
-          )}
-          <input
-            type="file"
-            id="fileInput"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ display: 'none' }} // Hide the input element visually
-          />
-        </label>
+        <div className="my-story">
+          <label htmlFor="fileInput" className="story">
+            {currentUser.profilePic ? (
+              <img src={"/upload/" + currentUser.profilePic} alt="" />
+            ) : (
+              <img src={Avatar} alt="Default Avatar" />
+            )}
+            <span>{currentUser.name}</span>
+            {file ? ( // Render "upload" text if file is selected
+              <button
+                onClick={handleUploadClick}
+                className="upload-btn btn btn-primary mx-auto"
+              >
+                Upload
+              </button>
+            ) : (
+              <div>+</div>
+            )}
+            <input
+              type="file"
+              id="fileInput"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: "none" }} // Hide the input element visually
+            />
+          </label>
         </div>
         {error && "Something went wrong"}
         {isLoading ? (
@@ -220,7 +215,10 @@ const Stories = () => {
           Object.entries(stories).map(([userId, userStories]) => (
             <div key={userId}>
               {userStories && userStories.length > 0 && (
-                <div className="story my-auto" onClick={() => handleStoryClick(userId, 0)}>
+                <div
+                  className="story my-auto"
+                  onClick={() => handleStoryClick(userId, 0)}
+                >
                   <img src={userStories[0].url} alt="" />
                   <span>{userStories[0].name}</span>
                 </div>
@@ -228,16 +226,24 @@ const Stories = () => {
             </div>
           ))
         )}
-        
       </div>
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-          {stories[currentUserId] && stories[currentUserId][currentStoryIndex].userId === currentUser._id && (
-            <button className="story-delete btn btn-danger" onClick={() => handleDelete(stories[currentUserId][currentStoryIndex].storyId)}>
-              <DeleteOutlinedIcon />
-            </button>
-          )}
+            {stories[currentUserId] &&
+              stories[currentUserId][currentStoryIndex].userId ===
+                currentUser._id && (
+                <button
+                  className="story-delete btn btn-danger"
+                  onClick={() =>
+                    handleDelete(
+                      stories[currentUserId][currentStoryIndex].storyId
+                    )
+                  }
+                >
+                  <DeleteOutlinedIcon />
+                </button>
+              )}
             <Story
               stories={stories[currentUserId]}
               currentIndex={currentStoryIndex}

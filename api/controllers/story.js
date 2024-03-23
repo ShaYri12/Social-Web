@@ -1,7 +1,8 @@
 import Story from "../models/storyModel.js";
 import jwt from "jsonwebtoken";
 import moment from "moment";
-import Relationship from "../models/relationshipModel.js"; 
+import Relationship from "../models/relationshipModel.js";
+import mongoose from "mongoose";
 
 export const getStories = async (req, res) => {
   try {
@@ -15,9 +16,10 @@ export const getStories = async (req, res) => {
     const followedUserIds = await Relationship.distinct("followedUserId", {
       followerUserId: userInfo.id,
     });
-    
+    const objectId = new mongoose.Types.ObjectId(userInfo.id);
+
     // Include the current user's ID in the list of followed user IDs
-    followedUserIds.push(userInfo.id);
+    followedUserIds.push(objectId);
 
     // Query for stories that match the user IDs and are within the last day
     const stories = await Story.aggregate([
@@ -25,7 +27,7 @@ export const getStories = async (req, res) => {
         $match: {
           $or: [
             { userId: { $in: followedUserIds } }, // Stories from followed users
-            { userId: userInfo.id }, // Your own stories
+            { userId: objectId }, // Your own stories
           ],
           createdAt: { $gte: moment().subtract(1, "day").toDate() },
         },
@@ -49,8 +51,6 @@ export const getStories = async (req, res) => {
     return res.status(500).json(error);
   }
 };
-
-
 
 export const addStory = async (req, res) => {
   try {
