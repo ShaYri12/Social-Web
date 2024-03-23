@@ -1,97 +1,107 @@
-import { db } from "../connect.js";
+import Relationship from "../models/relationshipModel.js";
 import jwt from "jsonwebtoken";
 
-export const getRelationships = (req,res)=>{
-    const q = "SELECT followerUserId FROM relationships WHERE followedUserId = ?";
-
-    db.query(q, [req.query.followedUserId], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json(data.map(relationship=>relationship.followerUserId));
-    });
-}
-
-export const addRelationship = (req, res) => {
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json("Not logged in!");
-
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-
-    const q = "INSERT INTO relationships (`followerUserId`,`followedUserId`) VALUES (?)";
-    const values = [
-      userInfo.id,
-      req.body.userId
-    ];
-
-    db.query(q, [values], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json("Following");
-    });
-  });
+export const getRelationships = async (req, res) => {
+  try {
+    const relationships = await Relationship.find({ followedUserId: req.query.followedUserId });
+    const followerUserIds = relationships.map(relationship => relationship.followerUserId);
+    return res.status(200).json(followerUserIds);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
 };
 
-export const deleteRelationship = (req, res) => {
+export const addRelationship = async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+    if (!token) return res.status(401).json("Not logged in!");
 
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json("Not logged in!");
+    const userInfo = jwt.verify(token, "secretkey");
+    if (!userInfo) return res.status(403).json("Token is not valid!");
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
+    const newRelationship = new Relationship({
+      followerUserId: userInfo.id,
+      followedUserId: req.body.userId
+    });
 
-    const q = "DELETE FROM relationships WHERE `followerUserId` = ? AND `followedUserId` = ?";
+    await newRelationship.save();
+    return res.status(200).json("Following");
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
+};
 
-    db.query(q, [userInfo.id, req.query.userId], (err, data) => {
-      if (err) return res.status(500).json(err);
+export const deleteRelationship = async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+    if (!token) return res.status(401).json("Not logged in!");
+
+    const userInfo = jwt.verify(token, "secretkey");
+    if (!userInfo) return res.status(403).json("Token is not valid!");
+
+    const deletedRelationship = await Relationship.findOneAndDelete({
+      followerUserId: userInfo.id,
+      followedUserId: req.query.userId
+    });
+
+    if (deletedRelationship) {
       return res.status(200).json("Unfollow");
-    });
-  });
+    } else {
+      return res.status(500).json("Failed to unfollow");
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
 };
 
-export const getFollowings = (req, res) => {
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json("Not logged in!");
+export const getFollowings = async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+    if (!token) return res.status(401).json("Not logged in!");
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
+    const userInfo = jwt.verify(token, "secretkey");
+    if (!userInfo) return res.status(403).json("Token is not valid!");
 
-    const userId = userInfo.id;
-    
-    const q = `
-      SELECT u.id AS userId, u.name, u.profilePic, u.online
-      FROM users AS u
-      JOIN relationships AS r ON (u.id = r.followedUserId)
-      WHERE r.followerUserId = ? 
-      ORDER BY u.name ASC
-    `;
+    const followings = await Relationship.find({ followerUserId: userInfo.id })
+      .populate({ path: "followedUserId", select: "id name profilePic online" })
+      .sort({ name: 1 });
 
-    db.query(q, [userId], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json(data);
-    });
-  });
+    if (!followings) {
+      // If the user has no followings, return an empty array
+      return res.status(200).json([]);
+    }
+
+    return res.status(200).json(followings);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
 };
 
+export const getFollowers = async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+    if (!token) return res.status(401).json("Not logged in!");
 
-export const getFollowers = (req, res) => {
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json("Not logged in!");
+    const userInfo = jwt.verify(token, "secretkey");
+    if (!userInfo) return res.status(403).json("Token is not valid!");
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
+    const followers = await Relationship.find({ followedUserId: userInfo.id })
+      .populate({ path: "followerUserId", select: "id name profilePic online" })
+      .sort({ name: 1 });
 
-    const userId = userInfo.id;
-    
-    const q = `
-      SELECT u.id AS userId, u.name, u.profilePic, u.online
-      FROM users AS u
-      JOIN relationships AS r ON (u.id = r.followerUserId)
-      WHERE r.followedUserId = ? 
-      ORDER BY u.name ASC
-    `;
+    if (!followers) {
+      // If the user has no followers, return an empty array
+      return res.status(200).json([]);
+    }
 
-    db.query(q, [userId], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json(data);
-    });
-  });
+    return res.status(200).json(followers);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
 };
+

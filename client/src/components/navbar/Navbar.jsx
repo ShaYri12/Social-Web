@@ -163,7 +163,7 @@ const Navbar = () => {
                       {searchResults.length > 0 && (
                         <ul className="search-results shadow mx-auto">
                           {searchResults.map((result) => (
-                            <Link to={`/profile/${result.id}`}><li className="search-item" key={result.id}>{result.name}</li></Link>
+                            <Link to={`/profile/${result._id}`}><li className="search-item" key={result._id}>{result.name}</li></Link>
                           ))}
                         </ul>
                       )}
@@ -202,9 +202,9 @@ const Navbar = () => {
                       )}
                     </button>
                     <ul className={`dropdown-menu text-center position-absolute ${darkMode ? 'dropdown-menu-dark' : ''} ${window.innerWidth >= 768 ? ('start-30 translate-middle-x') : ('start-50 translate-middle-x')}`}>
-                      <li><NavLink className="dropdown-item" to={`/profile/${currentUser.id}`}>Profile</NavLink></li>
+                      <li><NavLink className="dropdown-item" to={`/profile/${currentUser._id}`}>Profile</NavLink></li>
                       <li><hr className="dropdown-divider"/></li>
-                      <li><button className="dropdown-item" onClick={(()=>handleLogout(currentUser.id))}>Logout</button></li>
+                      <li><button className="dropdown-item" onClick={(()=>handleLogout(currentUser._id))}>Logout</button></li>
                     </ul>
                   </div>
                 </div>

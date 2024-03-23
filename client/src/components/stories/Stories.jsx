@@ -59,7 +59,7 @@ const Stories = () => {
       const imgUrl = res.data;
       const newStory = {
         img: imgUrl,
-        userId: currentUser.id,
+        userId: currentUser._id,
         name: currentUser.name,
         profile: currentUser.profilePic,
       };
@@ -84,7 +84,7 @@ const Stories = () => {
           url: "/upload/" + story.img,
           name: story.name,
           userId: story.userId,
-          storyId: story.id
+          storyId: story._id
         });
       });
       setStories(groupedStories);
@@ -233,7 +233,7 @@ const Stories = () => {
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-          {stories[currentUserId] && stories[currentUserId][currentStoryIndex].userId === currentUser.id && (
+          {stories[currentUserId] && stories[currentUserId][currentStoryIndex].userId === currentUser._id && (
             <button className="story-delete btn btn-danger" onClick={() => handleDelete(stories[currentUserId][currentStoryIndex].storyId)}>
               <DeleteOutlinedIcon />
             </button>

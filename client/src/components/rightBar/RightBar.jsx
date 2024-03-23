@@ -58,7 +58,7 @@ const RightBar = () => {
       if (response.status !== 200) {
         throw new Error("Failed to follow");
       }
-      setSuggestedUsers(suggestedUsers.filter(user => user.id !== followerId));
+      setSuggestedUsers(suggestedUsers.filter(user => user._id !== followerId));
     } catch (error) {
       console.error("Error toggling follow:", error);
     }
@@ -66,7 +66,7 @@ const RightBar = () => {
 
   const handleDismiss = (userId) => {
     // Remove the dismissed user from suggestions
-    setSuggestedUsers(suggestedUsers.filter(user => user.id !== userId));
+    setSuggestedUsers(suggestedUsers.filter(user => user._id !== userId));
   };
 
   return (
@@ -80,8 +80,8 @@ const RightBar = () => {
             {error && <span className="d-block pt-3">{error}</span>}
             {!loading && !error && suggestedUsers && suggestedUsers.length > 0 ? (
               suggestedUsers.map((user) => (
-                <div className="user" key={user.id}>
-                  <Link to={`/profile/${user.id}`} className="userInfo">
+                <div className="user" key={user._id}>
+                  <Link to={`/profile/${user._id}`} className="userInfo">
                     <img
                       className="img-fluid"
                       src={user.profilePic ? "/upload/" + user.profilePic : Avatar}
@@ -90,8 +90,8 @@ const RightBar = () => {
                     <span>{user.name}</span>
                   </Link>
                   <div className="buttons">
-                    <button className="btn btn-follow" type="button" onClick={() => handleFollow(user.id)}><PersonAddIcon/></button>
-                    <button className="btn btn-dismiss" type="button" onClick={() => handleDismiss(user.id)}><CloseIcon/></button>
+                    <button className="btn btn-follow" type="button" onClick={() => handleFollow(user._id)}><PersonAddIcon/></button>
+                    <button className="btn btn-dismiss" type="button" onClick={() => handleDismiss(user._id)}><CloseIcon/></button>
                   </div>          
                 </div>
               ))
@@ -106,8 +106,8 @@ const RightBar = () => {
             {onlineFriendsError && <span className="d-block pt-3">{onlineFriendsError}</span>}
             {!onlineFriendsLoading && !onlineFriendsError && onlineFriends && onlineFriends.length > 0 ? (
               onlineFriends.map((friend) => (
-                <div className="user" key={friend.id}>
-                  <Link to={`/profile/${friend.id}`} className="userInfo">
+                <div className="user" key={friend._id}>
+                  <Link to={`/profile/${friend._id}`} className="userInfo">
                     <img
                       className="img-fluid"
                       src={friend.profilePic ? "/upload/" + friend.profilePic : Avatar}

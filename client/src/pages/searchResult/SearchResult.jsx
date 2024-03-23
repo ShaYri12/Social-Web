@@ -50,8 +50,8 @@ const SearchResult = () => {
       {users.length > 0 ? (
         <div>
           {users.map(user => (
-            <div key={user.id} className='search-item rounded-4 my-2 p-2 d-flex justify-content-between align-items-center'>
-              <Link to={`/profile/${user.id}`} className='d-flex gap-3 uinfo'>
+            <div key={user._id} className='search-item rounded-4 my-2 p-2 d-flex justify-content-between align-items-center'>
+              <Link to={`/profile/${user._id}`} className='d-flex gap-3 uinfo'>
                 {user.profilePic ? (
                   <img className='img-fluid rounded-circle profile-img' src={`/upload/${user.profilePic}`} alt={user.username} />
                 ) : (
@@ -59,8 +59,8 @@ const SearchResult = () => {
                 )}
                 <h5 className='my-auto'>{user.name || user.username}</h5>
               </Link>
-              <button className='btn btn-primary btn-follow' onClick={() => handleFollow(user.id)}>
-                {followingMap[user.id] ? 'Following' : 'Follow'}
+              <button className='btn btn-primary btn-follow' onClick={() => handleFollow(user._id)}>
+                {followingMap[user._id] ? 'Following' : 'Follow'}
               </button>
             </div>
           ))}

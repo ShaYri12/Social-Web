@@ -21,8 +21,8 @@ const Post = ({ post }) => {
 
   const { currentUser } = useContext(AuthContext);
 
-  const { isLoading, error, data } = useQuery(["likes", post.id], () =>
-    makeRequest.get("/likes?postId=" + post.id).then((res) => {
+  const { isLoading, error, data } = useQuery(["likes", post._id], () =>
+    makeRequest.get("/likes?postId=" + post._id).then((res) => {
       return res.data;
     })
   );
@@ -31,8 +31,8 @@ const Post = ({ post }) => {
 
   const mutation = useMutation(
     (liked) => {
-      if (liked) return makeRequest.delete("/likes?postId=" + post.id);
-      return makeRequest.post("/likes", { postId: post.id });
+      if (liked) return makeRequest.delete("/likes?postId=" + post._id);
+      return makeRequest.post("/likes", { postId: post._id });
     },
     {
       onSuccess: () => {
@@ -54,7 +54,7 @@ const Post = ({ post }) => {
   );
 
   const handleLike = () => {
-    mutation.mutate(data.includes(currentUser.id));
+    mutation.mutate(data.includes(currentUser._id));
   };
 
   const handleDelete = () => {
@@ -83,7 +83,7 @@ const Post = ({ post }) => {
             </div>
           </div>
           <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
-          {menuOpen && post.userId === currentUser.id && (
+          {menuOpen && post.userId === currentUser._id && (
             <button className="btn" onClick={handleDelete}>delete</button>
           )}
         </div>
@@ -103,7 +103,7 @@ const Post = ({ post }) => {
           <div className="item">
             {isLoading ? (
               "loading"
-            ) : data.includes(currentUser.id) ? (
+            ) : data.includes(currentUser._id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
                 onClick={handleLike}
@@ -122,7 +122,7 @@ const Post = ({ post }) => {
             Share
           </div>
         </div>
-        {commentOpen && <Comments postId={post.id} />}
+        {commentOpen && <Comments postId={post._id} />}
       </div>
     </div>
   );

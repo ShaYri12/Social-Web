@@ -58,7 +58,7 @@ const Profile = () => {
   );
 
   const handleFollow = () => {
-    mutation.mutate(relationshipData.includes(currentUser.id));
+    mutation.mutate(relationshipData.includes(currentUser._id));
   };
 
   return (
@@ -106,11 +106,11 @@ const Profile = () => {
                     <span>{userData.website || "not added"}</span>
                   </div>
                 </div>
-                {userId === currentUser.id ? (
+                {userId === currentUser._id ? (
                   <button onClick={() => setOpenUpdate(true)}>Edit Profile</button>
                 ) : (
                   <button onClick={handleFollow}>
-                    {relationshipData.includes(currentUser.id)
+                    {relationshipData.includes(currentUser._id)
                       ? "Following"
                       : "Follow"}
                   </button>
