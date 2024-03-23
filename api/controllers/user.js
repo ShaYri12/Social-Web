@@ -83,7 +83,7 @@ export const getSuggestedUsers = async (req, res) => {
     }
 
     let suggestedUsers = [];
-    if (user.following?.length === 0) {
+    if (!user.following || user.following.length === 0) {
       suggestedUsers = await User.aggregate([
         { $match: { _id: { $ne: userId } } },
         { $sample: { size: 2 } },
@@ -91,7 +91,7 @@ export const getSuggestedUsers = async (req, res) => {
     } else {
       const followedUserIds = user.following;
       suggestedUsers = await User.aggregate([
-        { $match: { _id: { $nin: followedUserIds, $ne: userId } } },
+        { $match: { _id: { $nin: followedUserIds.concat(userId) } } },
         { $sample: { size: 2 } },
       ]);
     }
@@ -102,6 +102,7 @@ export const getSuggestedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
 
 export const updateOnlineStatus = async (req, res) => {
   try {
