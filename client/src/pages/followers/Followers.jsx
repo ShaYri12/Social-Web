@@ -8,55 +8,53 @@ import ArrowBackwardIcon from "@mui/icons-material/ArrowBack";
 const Followers = () => {
   const [followers, setFollowers] = useState([]);
   const [followingMap, setFollowingMap] = useState({});
-  // console.log(followers);
 
   useEffect(() => {
-    window.scrollTo(0, -1);
-  }, []);
-
-  useEffect(() => {
-    const fetchFollowers = async () => {
+    const fetchFollowersAndFollowing = async () => {
       try {
-        const response = await makeRequest.get("/relationships/follower");
-        setFollowers(response.data); // Assuming the response data is an array of followers
-      } catch (error) {
-        console.error("Error fetching followers:", error);
-      }
-    };
-    fetchFollowers();
-  }, []);
+        const [followersResponse, followingResponse] = await Promise.all([
+          makeRequest.get("/relationships/follower"),
+          makeRequest.get("/relationships/following"),
+        ]);
 
-  useEffect(() => {
-    const fetchFollowing = async () => {
-      try {
-        const response = await makeRequest.get("/relationships/following");
-        const followingIds = response.data.map((following) => following._id);
+        // Extract follower IDs from the followers response
+        const followerIds = followersResponse.data.map((follower) => follower.followerUserId._id);
 
-        const followingMap = Object.fromEntries(
-          followingIds.map((id) => [id, true])
-        );
+        // Extract followed user IDs from the following response
+        const followingIds = followingResponse.data.map((following) => following.followedUserId._id);
+
+        // Create a following map based on whether the user is following each follower
+        const followingMap = {};
+        followerIds.forEach((followerId) => {
+          followingMap[followerId] = followingIds.includes(followerId);
+        });
+
+        // Set followers and following map states
+        setFollowers(followersResponse.data);
         setFollowingMap(followingMap);
       } catch (error) {
-        console.error("Error fetching following:", error);
+        console.error("Error fetching followers and following:", error);
       }
     };
-    fetchFollowing();
+
+    fetchFollowersAndFollowing();
   }, []);
 
   const handleFollow = async (followerId) => {
     try {
-      if (followingMap[followerId]) {
-        await makeRequest.delete(`/relationships?userId=${followerId}`);
-        setFollowingMap((prevMap) => ({ ...prevMap, [followerId]: false }));
-        console.log("Unfollowed");
-      } else {
-        await makeRequest.post("/relationships", { userId: followerId });
-        setFollowingMap((prevMap) => ({ ...prevMap, [followerId]: true }));
-        console.log("Followed");
-      }
+      const response = followingMap[followerId]
+        ? await makeRequest.delete(`/relationships?userId=${followerId}`)
+        : await makeRequest.post("/relationships", { userId: followerId });
 
-      const updatedFollowers = await makeRequest.get("/relationships/follower");
-      setFollowers(updatedFollowers.data);
+      // Update following map
+      const updatedFollowingMap = { ...followingMap, [followerId]: !followingMap[followerId] };
+      setFollowingMap(updatedFollowingMap);
+
+      // Update followers list if the request was successful
+      if (response.status === 200) {
+        const updatedFollowersResponse = await makeRequest.get("/relationships/follower");
+        setFollowers(updatedFollowersResponse.data);
+      }
     } catch (error) {
       console.error("Error toggling follow:", error);
     }
@@ -75,32 +73,32 @@ const Followers = () => {
       </div>
       {followers.map((follower) => (
         <div
-          key={follower.followerUserId._id}
-          className="follower rounded-4 my-2 p-2 d-flex justify-content-between align-items-center"
-        >
-          <Link
-            to={`/profile/${follower.followerUserId._id}`}
-            className="d-flex gap-3 uinfo"
-          >
-            <img
-              className="img-fluid rounded-circle profile-img"
-              src={
-                follower.followerUserId.profilePic
-                  ? "/upload/" + follower.followerUserId.profilePic
-                  : Avatar
-              }
-              alt=""
-            />
-            {follower.followerUserId.online === 1 && <div className="online" />}
-            <h5 className="my-auto">{follower.followerUserId.name}</h5>
-          </Link>
-          <button
-            className="btn btn-primary btn-follow"
-            onClick={() => handleFollow(follower.followerUserId._id)}
-          >
-            {followingMap[follower.followerUserId._id] ? "Following" : "Follow"}
-          </button>
-        </div>
+  key={follower._id}
+  className="follower rounded-4 my-2 p-2 d-flex justify-content-between align-items-center"
+>
+  <Link
+    to={`/profile/${follower.followerUserId._id}`}
+    className="d-flex gap-3 uinfo"
+  >
+    <img
+      className="img-fluid rounded-circle profile-img"
+      src={
+        follower.followerUserId.profilePic
+          ? "/upload/" + follower.followerUserId.profilePic
+          : Avatar
+      }
+      alt=""
+    />
+    {follower.followerUserId.online === 1 && <div className="online" />}
+    <h5 className="my-auto">{follower.followerUserId.name}</h5>
+  </Link>
+  <button
+    className="btn btn-primary btn-follow"
+    onClick={() => handleFollow(follower.followerUserId._id)}
+  >
+    {followingMap[follower.followerUserId._id] ? "Following" : "Follow"}
+  </button>
+</div>
       ))}
     </div>
   );
