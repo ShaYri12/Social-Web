@@ -5,11 +5,11 @@ import { Box, Text } from "@chakra-ui/layout";
 const UserListItem = ({ handleFunction, user }) => {
   return (
     <Box
-      className="cursor-pointer bg-[#E8E8E8] w-full flex align-middle px-4 py-2 mb-2 rounded-lg text-black hover:text-white hover:bg-[#38B2AC]"
+      className="cursor-pointer bg-light d-flex align-items-center px-4 py-2 mb-2 rounded text-dark hover:text-white hover:bg-info"
       onClick={handleFunction}
     >
       <Avatar
-        className="mr-3 text-sm cursor-pointer"
+        className="me-3 fs-sm cursor-pointer"
         name={user.name}
         src={user.pic}
       />

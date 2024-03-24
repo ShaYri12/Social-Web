@@ -10,14 +10,15 @@ const Chatpage = () => {
   const { user } = ChatState();
 
   return (
-    <div className="w-screen h-screen bg-slate-300">
-      {user && <SideDrawer className="w-full " />}
-
-      <Box className="flex gap-4">
-        {user && <MyChats user={user} />}
-        {user && <Chatbox />}
-      </Box>
-    </div>
+    <div className="w-100 h-100 bg-slate-300">
+    {user && <SideDrawer className="w-100" />}
+  
+    <Box className="d-flex">
+      {user && <MyChats user={user} />}
+      {user && <Chatbox />}
+    </Box>
+  </div>
+  
   );
 };
 
