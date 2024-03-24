@@ -85,44 +85,46 @@ const SideDrawer = () => {
 
   return (
     <div>
-      <Box className="flex justify-between backdrop-blur-lg bg-white/60 items-center w-full p-4">
-        <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
-          <Button onClick={onOpen}>Search Buddy.</Button>
-        </Tooltip>
-        <Text className="font-semibold text-xl">Chattinger..</Text>
-      </Box>
-
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>
-          <DrawerBody>
-            <Box className="flex pb-2 gap-2 items-center">
-              <Input
-                placeholder="Search by name or email"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+    <Box className="d-flex justify-content-between backdrop-blur-lg bg-white bg-opacity-60 items-center w-100 p-4">
+      <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
+        <Button onClick={onOpen}>Search Buddy.</Button>
+      </Tooltip>
+      <Text className="font-weight-bold fs-3">Chattinger..</Text>
+    </Box>
+  
+    <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerHeader borderBottom="1px solid">
+          Search Users
+        </DrawerHeader>
+        <DrawerBody>
+          <Box className="d-flex pb-2 gap-2 align-items-center">
+            <Input
+              placeholder="Search by name or email"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <Button onClick={handleSearch} className="my-4">
+              Go
+            </Button>
+          </Box>
+          {loading ? (
+            <ChatLoading />
+          ) : (
+            searchResult?.map((user) => (
+              <UserListItem
+                key={user._id}
+                user={user}
+                handleFunction={() => accessChat(user._id)}
               />
-              <Button onClick={handleSearch} className="my-4">
-                Go
-              </Button>
-            </Box>
-            {loading ? (
-              <ChatLoading />
-            ) : (
-              searchResult?.map((user) => (
-                <UserListItem
-                  key={user._id}
-                  user={user}
-                  handleFunction={() => accessChat(user._id)}
-                />
-              ))
-            )}
-            {loadingChat && <Spinner className="ml-auto flex" />}
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </div>
+            ))
+          )}
+          {loadingChat && <Spinner className="ms-auto d-flex" />}
+        </DrawerBody>
+      </DrawerContent>
+    </Drawer>
+  </div>  
   );
 };
 

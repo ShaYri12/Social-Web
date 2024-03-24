@@ -42,7 +42,8 @@ const MyChats = ({ fetchAgain, user }) => {
 
   return (
     <Box
-      className="h-[400px] rounded-lg"
+      className="rounded-lg"
+      style={{ height: "400px" }}
       d={{ base: selectedChat ? "none" : "fixed", md: "flex" }}
       flexDir="column"
       alignItems="center"
@@ -50,47 +51,42 @@ const MyChats = ({ fetchAgain, user }) => {
       m={6}
       w={{ base: "100%", md: "31%" }}
     >
-      <Box className="flex p-4 text-[28px] w-full bg-[#F8F8F8] justify-between items-center">
-        <Text className="text-[22px] font-semibold">My Chats</Text>
+      <Box className="d-flex p-4 text-28 w-100 bg-light justify-content-between align-items-center">
+  <Text className="text-22 font-weight-semibold">My Chats</Text>
+  <GroupChatModal>
+    <Button className="d-flex text-12"><AddIcon /></Button>
+  </GroupChatModal>
+</Box>
+<Box className="d-flex flex-column p-4 w-100 h-100 overflow-y-auto bg-light">
+  {chats ? (
+    <Stack overflowY="scroll">
+      {chats.map((chat) => (
+        <Box
+          onClick={() => setSelectedChat(chat)}
+          className={"cursor-pointer px-4 py-2 rounded" + (selectedChat === chat ? " bg-primary text-white" : " bg-secondary text-dark")}
+          key={chat._id}
+        >
+          <Text>
+            {!chat.isGroupChat
+              ? getSender2(loggedUser, chat.users)
+              : chat.chatName}
+          </Text>
+          {chat.latestMessage && (
+            <Text className="text-xs">
+              <b>{chat.latestMessage.sender.name} : </b>
+              {chat.latestMessage.content.length > 50
+                ? chat.latestMessage.content.substring(0, 51) + "..."
+                : chat.latestMessage.content}
+            </Text>
+          )}
+        </Box>
+      ))}
+    </Stack>
+  ) : (
+    <ChatLoading />
+  )}
+</Box>
 
-        <GroupChatModal>
-          <Button className="flex text-[12px]" rightIcon={<AddIcon />}>
-            Group Chat
-          </Button>
-        </GroupChatModal>
-      </Box>
-      <Box className="flex flex-col p-4 w-full h-full overflow-y-scroll bg-[#F8F8F8]">
-        {chats ? (
-          <Stack overflowY="scroll">
-            {chats.map((chat) => (
-              <Box
-                onClick={() => setSelectedChat(chat)}
-                className="cursor-pointer px-4 py-2 rounded-lg"
-                bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
-                color={selectedChat === chat ? "white" : "black"}
-                key={chat._id}
-              >
-                <Text>
-                  {!chat.isGroupChat
-                    ? getSender2(loggedUser, chat.users)
-                    : chat.chatName}
-                </Text>
-
-                {chat.latestMessage && (
-                  <Text fontSize="xs">
-                    <b>{chat.latestMessage.sender.name} : </b>
-                    {chat.latestMessage.content.length > 50
-                      ? chat.latestMessage.content.substring(0, 51) + "..."
-                      : chat.latestMessage.content}
-                  </Text>
-                )}
-              </Box>
-            ))}
-          </Stack>
-        ) : (
-          <ChatLoading />
-        )}
-      </Box>
     </Box>
   );
 };

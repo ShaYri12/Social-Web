@@ -8,7 +8,7 @@ const Chatbox = ({ fetchAgain, setFetchAgain }) => {
 
   return (
     <Box
-      className="h-[400px] align-center p-4 m-7 rounded-lg"
+      className="h-400 align-items-center p-4 m-7 rounded-lg"
       w={{ base: "100%", md: "68%" }}
     >
       <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
