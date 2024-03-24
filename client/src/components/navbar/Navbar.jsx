@@ -243,12 +243,12 @@ const Navbar = () => {
                   <PersonOutlinedIcon />
                 </NavLink>
                 <NavLink
-                to="/chats"
-                className="message align-items-center d-flex flex-column justify-content-center"
-              >
-                <EmailOutlinedIcon />
-              </NavLink>
-              
+                  to="/chats"
+                  className="message align-items-center d-flex flex-column justify-content-center"
+                >
+                  <EmailOutlinedIcon />
+                </NavLink>
+
                 <div className="profile dropdown align-items-center d-flex flex-column justify-content-center">
                   <div className="position-relative">
                     <button
@@ -257,9 +257,9 @@ const Navbar = () => {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      {currentUser.profilePic ? (
+                      {currentUser?.profilePic ? (
                         <img
-                          src={"/upload/" + currentUser.profilePic}
+                          src={"/upload/" + currentUser?.profilePic}
                           className="profileimg img-fluid rounded-circle"
                           alt=""
                         />
@@ -283,7 +283,7 @@ const Navbar = () => {
                       <li>
                         <NavLink
                           className="dropdown-item"
-                          to={`/profile/${currentUser._id}`}
+                          to={`/profile/${currentUser?._id}`}
                         >
                           Profile
                         </NavLink>
@@ -294,7 +294,7 @@ const Navbar = () => {
                       <li>
                         <button
                           className="dropdown-item"
-                          onClick={() => handleLogout(currentUser._id)}
+                          onClick={() => handleLogout(currentUser?._id)}
                         >
                           Logout
                         </button>

@@ -41,66 +41,92 @@ const MyChats = ({ fetchAgain, user }) => {
     // eslint-disable-next-line
   }, [fetchAgain]);
 
-  const {darkMode } = useContext(DarkModeContext);
+  const { darkMode } = useContext(DarkModeContext);
   return (
     <Box
-      className="rounded-lg  ms-0 ms-sm-4 shadow chat-list-box"
-      style={{ height: "490px", minHeight:"530px" }}
+      className="rounded-lg  ms-0 ms-sm-4 p-sm-4 m-7  chat-list-box"
+      style={{ height: "490px", minHeight: "530px" }}
       d={{ base: selectedChat ? "none" : "fixed", md: "flex" }}
       flexDir="column"
       alignItems="center"
       p={0}
       w={{ base: "100%", md: "31%" }}
     >
-      <Box className={`${darkMode ? 'bg-dark text-white' : 'light-theme '} d-flex p-4 pt-3 pt-sm-5 text-28 w-100 bg-light justify-content-between align-items-center`}>
-  <Text className="chat-main-heading my-auto" style={{fontSize:"22px",fontWeight:"bold"}}>My Chats</Text>
-  <GroupChatModal>
-    <Button className="chat-main-heading d-flex" style={{fontSize:"12px"}}><AddIcon /></Button>
-  </GroupChatModal>
-</Box>
-<Box className={`${darkMode ? 'bg-dark' : 'text-white'} chat-list-box d-flex flex-column p-4 pt-0 w-100 overflow-y-auto bg-light`} style={{maxHeight:"410px", height:"400px !important", minWidth: "150px" }}>
-  {chats ? (
-    <Stack overflowY="scroll">
-      {chats.map((chat) => (
-        <Box
-        onClick={() => setSelectedChat(chat)}
-        className={"chat-lists cursor-pointer px-3 py-0 rounded" + (selectedChat === chat ? " bg-primary text-white" : "")}
-        style={{
-          ...(selectedChat !== chat && { backgroundColor: "lightgray", color: "black" }),
-
-        }}
-        key={chat._id}
+      <Box
+        className={`${
+          darkMode ? "bg-dark text-white" : "light-theme "
+        } d-flex p-4 pt-3 pt-sm-5 text-28 w-100 bg-light justify-content-between align-items-center`}
       >
-
-          <Text className="my-2">
-            {!chat.isGroupChat
-              ? getSender2(loggedUser, chat.users)
-              : chat.chatName}
-          </Text>
-          {chat.latestMessage && (
-            <Text className="text-xs" style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              maxWidth: "100%", // Limit the maximum width to prevent unnecessary overflow
-            }}
+        <Text
+          className="chat-main-heading my-auto"
+          style={{ fontSize: "22px", fontWeight: "bold" }}
+        >
+          My Chats
+        </Text>
+        <GroupChatModal>
+          <Button
+            className="chat-main-heading d-flex"
+            style={{ fontSize: "12px" }}
           >
-              <b>{chat.latestMessage.sender.name} : </b>
-              {chat.latestMessage.content.length > 50
-                ? chat.latestMessage.content.substring(0, 51) + "..."
-                : chat.latestMessage.content}
-            </Text>
-          )}
-        </Box>
-      ))}
-    </Stack>
-  ) : (
-    <ChatLoading />
-  )}
-</Box>
-
-      
-
+            <AddIcon />
+          </Button>
+        </GroupChatModal>
+      </Box>
+      <Box
+        className={`${
+          darkMode ? "bg-dark" : "text-white"
+        } chat-list-box d-flex flex-column p-4 pt-0 w-100 overflow-y-auto bg-light`}
+        style={{
+          maxHeight: "410px",
+          height: "400px !important",
+          minWidth: "150px",
+        }}
+      >
+        {chats ? (
+          <Stack overflowY="scroll">
+            {chats.map((chat) => (
+              <Box
+                onClick={() => setSelectedChat(chat)}
+                className={
+                  "chat-lists cursor-pointer px-3 py-0 rounded" +
+                  (selectedChat === chat ? " bg-primary text-white" : "")
+                }
+                style={{
+                  ...(selectedChat !== chat && {
+                    backgroundColor: "lightgray",
+                    color: "black",
+                  }),
+                }}
+                key={chat._id}
+              >
+                <Text className="my-2">
+                  {!chat.isGroupChat
+                    ? getSender2(loggedUser, chat.users)
+                    : chat.chatName}
+                </Text>
+                {chat.latestMessage && (
+                  <Text
+                    className="text-xs"
+                    style={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      maxWidth: "100%", // Limit the maximum width to prevent unnecessary overflow
+                    }}
+                  >
+                    <b>{chat.latestMessage.sender.name} : </b>
+                    {chat.latestMessage.content.length > 50
+                      ? chat.latestMessage.content.substring(0, 51) + "..."
+                      : chat.latestMessage.content}
+                  </Text>
+                )}
+              </Box>
+            ))}
+          </Stack>
+        ) : (
+          <ChatLoading />
+        )}
+      </Box>
     </Box>
   );
 };

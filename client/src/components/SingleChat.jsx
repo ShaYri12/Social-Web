@@ -137,85 +137,105 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }, timerLength);
   };
 
-  const {darkMode } = useContext(DarkModeContext);
+  const { darkMode } = useContext(DarkModeContext);
   return (
     <>
       {selectedChat ? (
         <>
-        <Text className={`${darkMode ? 'bg-dark text-white' : 'light-theme'} chat-main-heading d-flex text-center text-4xl p-4 mb-0 w-100 rounded-lg justify-content-between align-items-center bg-light`} style={{fontSize:"22px",fontWeight:"bold"}}>
-        <IconButton
-          className="d-flex"
-          style={{ display: 'flex' }}
-          icon={<ArrowBackIcon />}
-          onClick={() => setSelectedChat("")}
-        />
-        {messages && (
-          <>
-            {!selectedChat.isGroupChat ? (
+          <Text
+            className={`${
+              darkMode ? "bg-dark text-white" : "light-theme"
+            } chat-main-heading d-flex text-center text-4xl p-4 mb-0 w-100 rounded-lg justify-content-between align-items-center bg-light`}
+            style={{ fontSize: "22px", fontWeight: "bold" }}
+          >
+            <IconButton
+              className="d-flex"
+              style={{ display: "flex" }}
+              icon={<ArrowBackIcon />}
+              onClick={() => setSelectedChat("")}
+            />
+            {messages && (
               <>
-                {getSender(user, selectedChat.users)}
-                <ProfileModal user={getSenderFull(user, selectedChat.users)} />
-              </>
-            ) : (
-              <>
-                {selectedChat.chatName.toUpperCase()}
-                <UpdateGroupChatModal
-                  fetchMessages={fetchMessages}
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                />
+                {!selectedChat.isGroupChat ? (
+                  <>
+                    {getSender(user, selectedChat.users)}
+                    <ProfileModal
+                      user={getSenderFull(user, selectedChat.users)}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {selectedChat.chatName.toUpperCase()}
+                    <UpdateGroupChatModal
+                      fetchMessages={fetchMessages}
+                      fetchAgain={fetchAgain}
+                      setFetchAgain={setFetchAgain}
+                    />
+                  </>
+                )}
               </>
             )}
-          </>
-        )}
-      </Text>
-      
-      <Box className="d-flex flex-column justify-content-end p-2 p-md-4 w-100 overflow-hidden" style={{ backgroundColor: "lightgray", maxHeight: "400px", height: "500px", overflowY: "auto" }}>
-      {loading ? (
-        <div className="d-flex justify-content-center align-items-center w-100 h-100">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      ) : (
-        <div className="messages" style={{ overflowY: "auto" }}>
-          <ScrollableChat messages={messages} />
-        </div>
-      )}
-    
-        
-          <FormControl onKeyDown={sendMessage} id="first-name" mt={3}>
-            {istyping ? (
-              <div className="d-flex justify-content-center align-items-center">
-                <Lottie
-                  options={defaultOptions}
-                  width={70}
-                  style={{ marginBottom: '15px', marginLeft: '0' }}
-                />
+          </Text>
+
+          <Box
+            className="d-flex flex-column justify-content-end p-2 p-md-4 w-100 overflow-hidden"
+            style={{
+              backgroundColor: "lightgray",
+              maxHeight: "400px",
+              height: "500px",
+              overflowY: "auto",
+            }}
+          >
+            {loading ? (
+              <div className="d-flex justify-content-center align-items-center w-100 h-100">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
               </div>
             ) : (
-              <></>
+              <div className="messages" style={{ overflowY: "auto" }}>
+                <ScrollableChat messages={messages} />
+              </div>
             )}
-            <Input
-              type="text"
-              variant="filled"
-              className={`${darkMode ? 'bg-dark text-white place-holder-white' : 'light-theme'} form-control bg-light`}
-              placeholder="Enter a message.."
-              value={newMessage}
-              onChange={typingHandler}
-            />
-          </FormControl>
-        </Box>
-        
+
+            <FormControl onKeyDown={sendMessage} id="first-name" mt={3}>
+              {istyping ? (
+                <div className="d-flex justify-content-center align-items-center">
+                  <Lottie
+                    options={defaultOptions}
+                    width={70}
+                    style={{ marginBottom: "15px", marginLeft: "0" }}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+              <Input
+                type="text"
+                variant="filled"
+                className={`${
+                  darkMode
+                    ? "bg-dark text-white place-holder-white"
+                    : "light-theme"
+                } form-control bg-light`}
+                placeholder="Enter a message.."
+                value={newMessage}
+                onChange={typingHandler}
+              />
+            </FormControl>
+          </Box>
         </>
       ) : (
-        // to get socket.io on same page 
+        // to get socket.io on same page
         <Box className="d-flex justify-center align-items-center h-100">
-        <Text className="fs-3 mb-3 mx-auto">
-          Start the Conversation.
-        </Text>
-      </Box>
-
+          <Text
+            className={`${
+              darkMode ? " text-white" : "light-theme "
+            } fs-3 mb-3 mx-auto`}
+          >
+            Start the Conversation.
+          </Text>
+        </Box>
       )}
     </>
   );

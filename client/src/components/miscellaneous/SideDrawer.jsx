@@ -21,7 +21,7 @@ import ChatLoading from "../ChatLoading";
 import { Spinner } from "@chakra-ui/spinner";
 import { makeRequest } from "../../axios";
 import { DarkModeContext } from "../../context/darkModeContext";
-import './drawer.scss'
+import "./drawer.scss";
 
 const SideDrawer = () => {
   const [search, setSearch] = React.useState("");
@@ -84,27 +84,30 @@ const SideDrawer = () => {
       // Catch and handle any errors that occur during the request
       console.log("Error fetching the chat:", error);
     }
-};
+  };
 
-const {darkMode } = useContext(DarkModeContext);
+  const { darkMode } = useContext(DarkModeContext);
 
   return (
     <div className="d-flex">
       <div className="behind-spacer d-block" style={{ height: "50px" }}></div>
-      <Box className={`${darkMode ? 'dark-theme' : 'light-theme'} position-fixed d-flex justify-content-between backdrop-blur-lg bg-white bg-opacity-60 items-center w-100 p-1 align-items-center px-0 px-md-4`} style={{ fontSize: "22px", fontWeight: "bold" }} >
+      <Box
+        className={`${
+          darkMode ? "dark-theme" : "light-theme"
+        } position-fixed d-flex justify-content-start  bg-opacity-60 items-center w-100 p-1 align-items-center px-0 px-md-4`}
+        style={{ fontSize: "22px", fontWeight: "bold" }}
+      >
         <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
-          <Button onClick={onOpen} style={{ fontSize: "10px !important" }}>Search Buddy.</Button>
+          <Button onClick={onOpen} style={{ fontSize: "10px !important" }}>
+            Search Buddy.
+          </Button>
         </Tooltip>
-        <Text className="font-weight-bold fs-3 my-auto">Chattinger..</Text>
-
       </Box>
 
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader borderBottom="1px solid">
-            Search Users
-          </DrawerHeader>
+          <DrawerHeader borderBottom="1px solid">Search Users</DrawerHeader>
           <DrawerBody>
             <Box className="d-flex pb-2 gap-2 align-items-center">
               <Input
