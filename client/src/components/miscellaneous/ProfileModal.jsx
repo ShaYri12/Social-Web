@@ -16,6 +16,7 @@ import {
 
 const ProfileModal = ({ user, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  console.log(user);
 
   return (
     <>
@@ -45,7 +46,7 @@ const ProfileModal = ({ user, children }) => {
             <Image
               borderRadius="full"
               boxSize="150px"
-              src={user.pic}
+              src={user.profilePic}
               alt={user.name}
             />
             <Text

@@ -47,14 +47,8 @@ const GroupChatModal = ({ children }) => {
 
     try {
       setLoading(true);
-      const { data } = await makeRequest.get(`/users?search=$${search}`);
+      const { data } = await makeRequest.get(`/users?search=${search}`);
 
-      // const { data } = await axios.get(
-      //   `http://localhost:8800/api/users?search=${search}`,
-      //   {
-      //     credentials: "include",
-      //   }
-      // );
       console.log(data);
       setLoading(false);
       setSearchResult(data);

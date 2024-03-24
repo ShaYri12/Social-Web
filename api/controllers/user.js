@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import Relationship from "../models/relationshipModel.js";
 import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 export const getUser = async (req, res) => {
   try {
@@ -69,7 +69,6 @@ export const searchUsers = async (req, res) => {
   }
 };
 
-
 export const getSuggestedUsers = async (req, res) => {
   try {
     const token = req.cookies.accessToken;
@@ -86,12 +85,18 @@ export const getSuggestedUsers = async (req, res) => {
     }
 
     // Find the IDs of followed users
-    const followedUserIds = await Relationship.find({ followerUserId: userId }).distinct('followedUserId');
+    const followedUserIds = await Relationship.find({
+      followerUserId: userId,
+    }).distinct("followedUserId");
 
     // Find suggested users who are not followed by the current user
     let suggestedUsers = await User.aggregate([
-      { $match: { $and: [ { _id: { $nin: followedUserIds } }, { _id: { $ne: userId } } ] } }, // Exclude followed users and the current user
-      { $sample: { size: 2 } } // Retrieve a random sample of 2 users
+      {
+        $match: {
+          $and: [{ _id: { $nin: followedUserIds } }, { _id: { $ne: userId } }],
+        },
+      }, // Exclude followed users and the current user
+      { $sample: { size: 2 } }, // Retrieve a random sample of 2 users
     ]);
 
     return res.json(suggestedUsers);
@@ -100,7 +105,6 @@ export const getSuggestedUsers = async (req, res) => {
     return res.status(500).json(error);
   }
 };
-
 
 export const updateOnlineStatus = async (req, res) => {
   try {
@@ -130,7 +134,6 @@ export const updateOnlineStatus = async (req, res) => {
   }
 };
 
-
 export const getOnlineFollowedUsers = async (req, res) => {
   try {
     // Verify the user's token to get their ID
@@ -148,7 +151,9 @@ export const getOnlineFollowedUsers = async (req, res) => {
     }
 
     // Extract the IDs of the users being followed by the current user
-    const followedUserIds = await Relationship.find({ followerUserId: userId }).distinct('followedUserId');
+    const followedUserIds = await Relationship.find({
+      followerUserId: userId,
+    }).distinct("followedUserId");
     if (followedUserIds.length === 0) {
       // If the user is not following anyone, return an empty array
       return res.json([]);
@@ -167,7 +172,6 @@ export const getOnlineFollowedUsers = async (req, res) => {
   }
 };
 
-
 export const allUsers = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
@@ -185,4 +189,3 @@ export const allUsers = asyncHandler(async (req, res) => {
     res.send("user not found");
   }
 });
-
