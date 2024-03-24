@@ -35,48 +35,6 @@ const Navbar = () => {
     }
   };
 
-  const handleSearchInput = async (value) => {
-    setSearchTerm(value); // Update search term state
-
-    if (!value.trim()) {
-      setSearchResults([]); // Clear search results if input is empty
-      return;
-    }
-
-    try {
-      const response = await makeRequest.get(
-        `users/search?searchTerm=${value}`
-      );
-      if (response.status !== 200) {
-        throw new Error(`Failed to search users: ${response.statusText}`);
-      }
-      setSearchResults(response.data); // Update search results
-    } catch (error) {
-      console.error("Error searching users:", error.message);
-      setSearchResults([]); // Clear search results in case of error
-    }
-  };
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchTerm.trim()) return;
-    try {
-      const response = await makeRequest.get(
-        `users/search?searchTerm=${searchTerm}`
-      );
-      if (response.status !== 200) {
-        throw new Error(`Failed to search users: ${response.statusText}`);
-      }
-      navigate(`/search-result?q=${searchTerm}`, {
-        state: { users: response.data },
-      });
-      setSearchResults([]);
-    } catch (error) {
-      console.error("Error searching users:", error.message);
-      // Optionally, display an error message to the user
-    }
-  };
-
   const hideSearchInput = (event) => {
     if (window.innerWidth < 767) {
       setIsSearchVisible(false);
@@ -191,43 +149,6 @@ const Navbar = () => {
                       onClick={toggle}
                       style={{ cursor: "pointer" }}
                     />
-                  )}
-                </li>
-                <li className="position-relative nav-item mx-auto mx-md-2 my-auto search mb-3 mb-md-0">
-                  {isSearchVisible ? (
-                    <>
-                      <form className="d-flex gap-1" onSubmit={handleSearch}>
-                        <SearchOutlinedIcon />
-                        <input
-                          type="text"
-                          placeholder="Search..."
-                          value={searchTerm}
-                          className={`${
-                            darkMode ? "search-input text-light" : ""
-                          }`}
-                          onChange={(e) => handleSearchInput(e.target.value)}
-                        />
-                      </form>
-                      {searchResults.length > 0 && (
-                        <ul className="search-results shadow mx-auto">
-                          {searchResults.map((result) => (
-                            <Link to={`/profile/${result._id}`}>
-                              <li className="search-item" key={result._id}>
-                                {result.name}
-                              </li>
-                            </Link>
-                          ))}
-                        </ul>
-                      )}
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      className="btn btn-link"
-                      onClick={() => setIsSearchVisible(true)}
-                    >
-                      <SearchOutlinedIcon />
-                    </button>
                   )}
                 </li>
               </ul>

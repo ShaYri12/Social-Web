@@ -230,7 +230,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         <Box className="d-flex justify-center align-items-center h-100">
           <Text
             className={`${
-              darkMode ? " text-white" : "light-theme "
+              darkMode ? " text-white" : "text-black "
             } fs-3 mb-3 mx-auto`}
           >
             Start the Conversation.

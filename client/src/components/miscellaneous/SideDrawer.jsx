@@ -92,9 +92,7 @@ const SideDrawer = () => {
     <div className="d-flex">
       <div className="behind-spacer d-block" style={{ height: "50px" }}></div>
       <Box
-        className={`${
-          darkMode ? "dark-theme" : "light-theme"
-        } position-fixed d-flex justify-content-start  bg-opacity-60 items-center w-100 p-1 align-items-center px-0 px-md-4`}
+        className={`position-fixed d-flex justify-content-start  bg-opacity-60 items-center w-100 p-2 align-items-center px-0 px-md-4`}
         style={{ fontSize: "22px", fontWeight: "bold" }}
       >
         <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
