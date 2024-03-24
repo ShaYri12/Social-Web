@@ -47,7 +47,7 @@ const MyChats = ({ fetchAgain, user }) => {
       d={{ base: selectedChat ? "none" : "fixed", md: "flex" }}
       flexDir="column"
       alignItems="center"
-      p={3}
+      p={0}
       m={6}
       w={{ base: "100%", md: "31%" }}
     >
