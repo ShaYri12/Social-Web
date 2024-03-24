@@ -244,12 +244,12 @@ const Navbar = () => {
                   <PersonOutlinedIcon />
                 </NavLink>
                 <NavLink
-                  to="/chats"
-                  className="message align-items-center d-flex flex-column justify-content-center"
-                >
-                  <EmailOutlinedIcon />
-                </NavLink>
-
+                to="/chats"
+                className="message align-items-center d-flex flex-column justify-content-center"
+              >
+                <EmailOutlinedIcon />
+              </NavLink>
+              
                 <div className="profile dropdown align-items-center d-flex flex-column justify-content-center">
                   <div className="position-relative">
                     <button
