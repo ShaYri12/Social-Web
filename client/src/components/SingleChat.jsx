@@ -4,7 +4,7 @@ import { Box, Text } from "@chakra-ui/layout";
 import "./styles.css";
 import { IconButton, Spinner, useToast } from "@chakra-ui/react";
 import { getSender, getSenderFull } from "../config/ChatLogics";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import ProfileModal from "./miscellaneous/ProfileModal";
@@ -15,6 +15,7 @@ import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../context/ChatProvider";
 import { makeRequest } from "../axios";
+import { DarkModeContext } from "../context/darkModeContext";
 
 const ENDPOINT = "http://localhost:8800";
 var socket, selectedChatCompare;
@@ -136,11 +137,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }, timerLength);
   };
 
+  const {darkMode } = useContext(DarkModeContext);
   return (
     <>
       {selectedChat ? (
         <>
-        <Text className="d-flex text-4xl p-4 w-100 rounded-lg justify-content-between align-items-center bg-light">
+        <Text className={`${darkMode ? 'bg-dark text-white' : 'light-theme'} chat-main-heading d-flex text-center text-4xl p-4 mb-0 w-100 rounded-lg justify-content-between align-items-center bg-light`} style={{fontSize:"22px",fontWeight:"bold"}}>
         <IconButton
           className="d-flex"
           style={{ display: 'flex' }}
@@ -168,18 +170,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         )}
       </Text>
       
-          <Box className="d-flex flex-column justify-content-end p-4 bg-secondary w-100 h-100 overflow-hidden">
-          {loading ? (
-            <div className="d-flex justify-content-center align-items-center w-100 h-100">
-              <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-            </div>
-          ) : (
-            <div className="messages">
-              <ScrollableChat messages={messages} />
-            </div>
-          )}
+      <Box className="d-flex flex-column justify-content-end p-2 p-md-4 w-100 overflow-hidden" style={{ backgroundColor: "lightgray", maxHeight: "400px", height: "500px", overflowY: "auto" }}>
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center w-100 h-100">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <div className="messages" style={{ overflowY: "auto" }}>
+          <ScrollableChat messages={messages} />
+        </div>
+      )}
+    
         
           <FormControl onKeyDown={sendMessage} id="first-name" mt={3}>
             {istyping ? (
@@ -196,7 +199,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             <Input
               type="text"
               variant="filled"
-              className="form-control bg-light"
+              className={`${darkMode ? 'bg-dark text-white place-holder-white' : 'light-theme'} form-control bg-light`}
               placeholder="Enter a message.."
               value={newMessage}
               onChange={typingHandler}
@@ -206,10 +209,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         
         </>
       ) : (
-        // to get socket.io on same page
+        // to get socket.io on same page 
         <Box className="d-flex justify-center align-items-center h-100">
-        <Text className="fs-3 mb-3">
-          Hurry, Click on the Chat.
+        <Text className="fs-3 mb-3 mx-auto">
+          Start the Conversation.
         </Text>
       </Box>
 

@@ -27,6 +27,7 @@ const Stories = () => {
       },
     }
   );
+  
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
@@ -41,6 +42,8 @@ const Stories = () => {
       }, 1000);
     }
   };
+
+  console.log(currentUser)
 
   const uploadStory = async (file) => {
     try {

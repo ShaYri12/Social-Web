@@ -2,12 +2,13 @@ import { AddIcon } from "@chakra-ui/icons";
 import { Box, Stack, Text } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getSender2 } from "../config/ChatLogics";
 import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../context/ChatProvider";
+import { DarkModeContext } from "../context/darkModeContext";
 
 const MyChats = ({ fetchAgain, user }) => {
   const [loggedUser, setLoggedUser] = useState();
@@ -40,39 +41,50 @@ const MyChats = ({ fetchAgain, user }) => {
     // eslint-disable-next-line
   }, [fetchAgain]);
 
+  const {darkMode } = useContext(DarkModeContext);
   return (
     <Box
-      className="rounded-lg"
-      style={{ height: "400px" }}
+      className="rounded-lg  ms-0 ms-sm-4 shadow chat-list-box"
+      style={{ height: "490px", minHeight:"530px" }}
       d={{ base: selectedChat ? "none" : "fixed", md: "flex" }}
       flexDir="column"
       alignItems="center"
       p={0}
-      m={6}
       w={{ base: "100%", md: "31%" }}
     >
-      <Box className="d-flex p-4 text-28 w-100 bg-light justify-content-between align-items-center">
-  <Text className="text-22 font-weight-semibold">My Chats</Text>
+      <Box className={`${darkMode ? 'bg-dark text-white' : 'light-theme '} d-flex p-4 pt-3 pt-sm-5 text-28 w-100 bg-light justify-content-between align-items-center`}>
+  <Text className="chat-main-heading my-auto" style={{fontSize:"22px",fontWeight:"bold"}}>My Chats</Text>
   <GroupChatModal>
-    <Button className="d-flex text-12"><AddIcon /></Button>
+    <Button className="chat-main-heading d-flex" style={{fontSize:"12px"}}><AddIcon /></Button>
   </GroupChatModal>
 </Box>
-<Box className="d-flex flex-column p-4 w-100 h-100 overflow-y-auto bg-light">
+<Box className={`${darkMode ? 'bg-dark' : 'text-white'} chat-list-box d-flex flex-column p-4 pt-0 w-100 overflow-y-auto bg-light`} style={{maxHeight:"410px", height:"400px !important", minWidth: "150px" }}>
   {chats ? (
     <Stack overflowY="scroll">
       {chats.map((chat) => (
         <Box
-          onClick={() => setSelectedChat(chat)}
-          className={"cursor-pointer px-4 py-2 rounded" + (selectedChat === chat ? " bg-primary text-white" : " bg-secondary text-dark")}
-          key={chat._id}
-        >
-          <Text>
+        onClick={() => setSelectedChat(chat)}
+        className={"chat-lists cursor-pointer px-3 py-0 rounded" + (selectedChat === chat ? " bg-primary text-white" : "")}
+        style={{
+          ...(selectedChat !== chat && { backgroundColor: "lightgray", color: "black" }),
+
+        }}
+        key={chat._id}
+      >
+
+          <Text className="my-2">
             {!chat.isGroupChat
               ? getSender2(loggedUser, chat.users)
               : chat.chatName}
           </Text>
           {chat.latestMessage && (
-            <Text className="text-xs">
+            <Text className="text-xs" style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              maxWidth: "100%", // Limit the maximum width to prevent unnecessary overflow
+            }}
+          >
               <b>{chat.latestMessage.sender.name} : </b>
               {chat.latestMessage.content.length > 50
                 ? chat.latestMessage.content.substring(0, 51) + "..."

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Box,
   Button,
@@ -20,6 +20,8 @@ import { ChatState } from "../../context/ChatProvider";
 import ChatLoading from "../ChatLoading";
 import { Spinner } from "@chakra-ui/spinner";
 import { makeRequest } from "../../axios";
+import { DarkModeContext } from "../../context/darkModeContext";
+import './drawer.scss'
 
 const SideDrawer = () => {
   const [search, setSearch] = React.useState("");
@@ -82,49 +84,51 @@ const SideDrawer = () => {
     }
 };
 
+const {darkMode } = useContext(DarkModeContext);
 
   return (
-    <div>
-    <Box className="d-flex justify-content-between backdrop-blur-lg bg-white bg-opacity-60 items-center w-100 p-4">
-      <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
-        <Button onClick={onOpen}>Search Buddy.</Button>
-      </Tooltip>
-      <Text className="font-weight-bold fs-3">Chattinger..</Text>
-    </Box>
-  
-    <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerHeader borderBottom="1px solid">
-          Search Users
-        </DrawerHeader>
-        <DrawerBody>
-          <Box className="d-flex pb-2 gap-2 align-items-center">
-            <Input
-              placeholder="Search by name or email"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <Button onClick={handleSearch} className="my-4">
-              Go
-            </Button>
-          </Box>
-          {loading ? (
-            <ChatLoading />
-          ) : (
-            searchResult?.map((user) => (
-              <UserListItem
-                key={user._id}
-                user={user}
-                handleFunction={() => accessChat(user._id)}
+    <div className="d-flex">
+      <div className="behind-spacer d-block" style={{ height: "50px" }}></div>
+      <Box className={`${darkMode ? 'dark-theme' : 'light-theme'} position-fixed d-flex justify-content-between backdrop-blur-lg bg-white bg-opacity-60 items-center w-100 p-1 align-items-center px-0 px-md-4`} style={{ fontSize: "22px", fontWeight: "bold" }} >
+        <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
+          <Button onClick={onOpen} style={{ fontSize: "10px !important" }}>Search Buddy.</Button>
+        </Tooltip>
+        <Text className="font-weight-bold fs-3 my-auto">Chattinger..</Text>
+      </Box>
+
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottom="1px solid">
+            Search Users
+          </DrawerHeader>
+          <DrawerBody>
+            <Box className="d-flex pb-2 gap-2 align-items-center">
+              <Input
+                placeholder="Search by name or email"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
-            ))
-          )}
-          {loadingChat && <Spinner className="ms-auto d-flex" />}
-        </DrawerBody>
-      </DrawerContent>
-    </Drawer>
-  </div>  
+              <Button onClick={handleSearch} className="my-4">
+                Go
+              </Button>
+            </Box>
+            {loading ? (
+              <ChatLoading />
+            ) : (
+              searchResult?.map((user) => (
+                <UserListItem
+                  key={user._id}
+                  user={user}
+                  handleFunction={() => accessChat(user._id)}
+                />
+              ))
+            )}
+            {loadingChat && <Spinner className="ms-auto d-flex" />}
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </div>
   );
 };
 

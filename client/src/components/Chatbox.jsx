@@ -8,11 +8,11 @@ const Chatbox = ({ fetchAgain, setFetchAgain }) => {
 
   return (
     <Box
-      className="align-items-center p-4 m-7 rounded-lg"
+      className="align-items-center p-0 p-sm-4 m-7 rounded-lg shadow"
       w={{ base: "100%", md: "68%" }}
-      style={{maxHeight:"432px"}}
+      style={{maxHeight:"530px", height:"530px"}}
     >
-      <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+      <SingleChat  fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
     </Box>
   );
 };

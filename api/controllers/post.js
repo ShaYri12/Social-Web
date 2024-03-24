@@ -7,6 +7,7 @@ export const getPosts = async (req, res) => {
   try {
     // Verify the user's token to get their ID
     const token = req.cookies.accessToken;
+    console.log("token: ",token)
     if (!token) return res.status(401).json("Not authenticated!");
 
     const userInfo = jwt.verify(token, "secretkey");
