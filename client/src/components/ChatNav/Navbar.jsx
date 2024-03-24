@@ -4,9 +4,8 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/authContext";
 import Avatar from "../../assets/avatar.jpg";
@@ -17,11 +16,6 @@ const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
   const { currentUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const location = useLocation();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [isOffcanvasVisible, setIsOffcanvasVisible] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
 
   const handleLogout = async () => {
     try {
@@ -34,51 +28,6 @@ const Navbar = () => {
       console.error("Error updating online status:", error);
     }
   };
-
-  const hideSearchInput = (event) => {
-    if (window.innerWidth < 767) {
-      setIsSearchVisible(false);
-    }
-  };
-
-  const updateSearchVisibility = () => {
-    const isSmallScreen = window.innerWidth > 767;
-    setIsSearchVisible(isSmallScreen);
-    setIsOffcanvasVisible(!isSmallScreen);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      // Check if the clicked element is outside the search container or the navbar
-      if (
-        !event.target.closest(".search-container") ||
-        !event.target.closest(".navbar")
-      ) {
-        setSearchResults([]); // Clear search results
-      }
-    };
-
-    document.body.addEventListener("click", handleClickOutside);
-
-    return () => {
-      document.body.removeEventListener("click", handleClickOutside);
-    };
-  }, [searchTerm]);
-
-  useEffect(() => {
-    updateSearchVisibility();
-    window.addEventListener("resize", updateSearchVisibility);
-    return () => {
-      window.removeEventListener("resize", updateSearchVisibility);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!location.pathname.includes("/search-result")) {
-      setSearchTerm("");
-      setSearchResults([]);
-    }
-  }, [location.pathname]);
 
   return (
     <>
@@ -108,22 +57,13 @@ const Navbar = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div
-            className={`offcanvas offcanvas-end ${
-              isOffcanvasVisible ? "offcanvas-visible" : ""
-            } ${darkMode ? "text-bg-dark" : ""}`}
+            className={`offcanvas offcanvas-end  ${
+              darkMode ? "text-bg-dark" : ""
+            }`}
             tabIndex="-1"
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
           >
-            <div className="offcanvas-header">
-              <button
-                type="button"
-                onClick={hideSearchInput}
-                className={`btn-close ${darkMode ? "btn-close-white" : ""}`}
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-              ></button>
-            </div>
             <div
               className="offcanvas-body align-item-center"
               id="navbarSupportedContent"

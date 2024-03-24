@@ -28,11 +28,7 @@ const io = new Server(server, {
 
 // Connect to MongoDB
 mongoose.connect(
-  "mongodb+srv://uzair:uzair123@api.cpammnv.mongodb.net/Chattinger?retryWrites=true&w=majority&appName=API",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
+  "mongodb+srv://uzair:uzair123@api.cpammnv.mongodb.net/Social_App?retryWrites=true&w=majority&appName=API"
 );
 
 const db = mongoose.connection;
