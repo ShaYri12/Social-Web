@@ -72,7 +72,9 @@ const SideDrawer = () => {
         onClose();
       } else {
         // If not successful, throw an error
-        throw new Error(`Network response was not ok. Status: ${response.status}`);
+        throw new Error(
+          `Network response was not ok. Status: ${response.status}`
+        );
       }
 
       setLoadingChat(false);
@@ -80,51 +82,47 @@ const SideDrawer = () => {
       // Catch and handle any errors that occur during the request
       console.log("Error fetching the chat:", error);
     }
-};
-
+  };
 
   return (
     <div>
-    <Box className="d-flex justify-content-between backdrop-blur-lg bg-white bg-opacity-60 items-center w-100 p-4">
-      <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
-        <Button onClick={onOpen}>Search Buddy.</Button>
-      </Tooltip>
-      <Text className="font-weight-bold fs-3">Chattinger..</Text>
-    </Box>
-  
-    <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerHeader borderBottom="1px solid">
-          Search Users
-        </DrawerHeader>
-        <DrawerBody>
-          <Box className="d-flex pb-2 gap-2 align-items-center">
-            <Input
-              placeholder="Search by name or email"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <Button onClick={handleSearch} className="my-4">
-              Go
-            </Button>
-          </Box>
-          {loading ? (
-            <ChatLoading />
-          ) : (
-            searchResult?.map((user) => (
-              <UserListItem
-                key={user._id}
-                user={user}
-                handleFunction={() => accessChat(user._id)}
+      <Box className="d-flex justify-content-start items-center w-100 px-4 pt-4">
+        <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
+          <Button onClick={onOpen}>Search Buddy.</Button>
+        </Tooltip>
+      </Box>
+
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottom="1px solid">Search Users</DrawerHeader>
+          <DrawerBody>
+            <Box className="d-flex pb-2 gap-2 align-items-center">
+              <Input
+                placeholder="Search by name or email"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
-            ))
-          )}
-          {loadingChat && <Spinner className="ms-auto d-flex" />}
-        </DrawerBody>
-      </DrawerContent>
-    </Drawer>
-  </div>  
+              <Button onClick={handleSearch} className="my-4">
+                Go
+              </Button>
+            </Box>
+            {loading ? (
+              <ChatLoading />
+            ) : (
+              searchResult?.map((user) => (
+                <UserListItem
+                  key={user._id}
+                  user={user}
+                  handleFunction={() => accessChat(user._id)}
+                />
+              ))
+            )}
+            {loadingChat && <Spinner className="ms-auto d-flex" />}
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </div>
   );
 };
 

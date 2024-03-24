@@ -140,79 +140,77 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     <>
       {selectedChat ? (
         <>
-        <Text className="d-flex text-4xl p-4 w-100 rounded-lg justify-content-between align-items-center bg-light">
-        <IconButton
-          className="d-flex"
-          style={{ display: 'flex' }}
-          icon={<ArrowBackIcon />}
-          onClick={() => setSelectedChat("")}
-        />
-        {messages && (
-          <>
-            {!selectedChat.isGroupChat ? (
-              <>
-                {getSender(user, selectedChat.users)}
-                <ProfileModal user={getSenderFull(user, selectedChat.users)} />
-              </>
-            ) : (
-              <>
-                {selectedChat.chatName.toUpperCase()}
-                <UpdateGroupChatModal
-                  fetchMessages={fetchMessages}
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                />
-              </>
-            )}
-          </>
-        )}
-      </Text>
-      
-          <Box className="d-flex flex-column justify-content-end p-4 bg-secondary w-100 h-100 overflow-hidden">
-          {loading ? (
-            <div className="d-flex justify-content-center align-items-center w-100 h-100">
-              <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-            </div>
-          ) : (
-            <div className="messages">
-              <ScrollableChat messages={messages} />
-            </div>
-          )}
-        
-          <FormControl onKeyDown={sendMessage} id="first-name" mt={3}>
-            {istyping ? (
-              <div className="d-flex justify-content-center align-items-center">
-                <Lottie
-                  options={defaultOptions}
-                  width={70}
-                  style={{ marginBottom: '15px', marginLeft: '0' }}
-                />
-              </div>
-            ) : (
-              <></>
-            )}
-            <Input
-              type="text"
-              variant="filled"
-              className="form-control bg-light"
-              placeholder="Enter a message.."
-              value={newMessage}
-              onChange={typingHandler}
+          <Text className="d-flex text-4xl p-4 w-100 rounded-lg justify-content-between align-items-center bg-light">
+            <IconButton
+              className="d-flex"
+              style={{ display: "flex" }}
+              icon={<ArrowBackIcon />}
+              onClick={() => setSelectedChat("")}
             />
-          </FormControl>
-        </Box>
-        
+            {messages && (
+              <>
+                {!selectedChat.isGroupChat ? (
+                  <>
+                    {getSender(user, selectedChat.users)}
+                    <ProfileModal
+                      user={getSenderFull(user, selectedChat.users)}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {selectedChat.chatName.toUpperCase()}
+                    <UpdateGroupChatModal
+                      fetchMessages={fetchMessages}
+                      fetchAgain={fetchAgain}
+                      setFetchAgain={setFetchAgain}
+                    />
+                  </>
+                )}
+              </>
+            )}
+          </Text>
+
+          <Box className="d-flex flex-column justify-content-end p-4 bg-light w-100 h-100 overflow-hidden">
+            {loading ? (
+              <div className="d-flex justify-content-center align-items-center w-100 h-100">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="messages">
+                <ScrollableChat messages={messages} />
+              </div>
+            )}
+
+            <FormControl onKeyDown={sendMessage} id="first-name" mt={3}>
+              {istyping ? (
+                <div className="d-flex justify-content-center align-items-center">
+                  <Lottie
+                    options={defaultOptions}
+                    width={70}
+                    style={{ marginBottom: "15px", marginLeft: "0" }}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+              <Input
+                type="text"
+                variant="filled"
+                className="form-control bg-light"
+                placeholder="Enter a message.."
+                value={newMessage}
+                onChange={typingHandler}
+              />
+            </FormControl>
+          </Box>
         </>
       ) : (
         // to get socket.io on same page
         <Box className="d-flex justify-center align-items-center h-100">
-        <Text className="fs-3 mb-3">
-          Hurry, Click on the Chat.
-        </Text>
-      </Box>
-
+          <Text className="fs-3 mb-3">Hurry, Click on the Chat.</Text>
+        </Box>
       )}
     </>
   );
