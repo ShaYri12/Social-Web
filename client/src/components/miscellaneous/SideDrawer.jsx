@@ -74,7 +74,9 @@ const SideDrawer = () => {
         onClose();
       } else {
         // If not successful, throw an error
-        throw new Error(`Network response was not ok. Status: ${response.status}`);
+        throw new Error(
+          `Network response was not ok. Status: ${response.status}`
+        );
       }
 
       setLoadingChat(false);
@@ -94,6 +96,7 @@ const {darkMode } = useContext(DarkModeContext);
           <Button onClick={onOpen} style={{ fontSize: "10px !important" }}>Search Buddy.</Button>
         </Tooltip>
         <Text className="font-weight-bold fs-3 my-auto">Chattinger..</Text>
+
       </Box>
 
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>

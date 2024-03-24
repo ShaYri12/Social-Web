@@ -99,6 +99,8 @@ const MyChats = ({ fetchAgain, user }) => {
   )}
 </Box>
 
+      
+
     </Box>
   );
 };

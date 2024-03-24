@@ -195,10 +195,6 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader className="text-[35px] flex justify-center">
-            {selectedChat.chatName}
-          </ModalHeader>
-
           <ModalCloseButton />
           <ModalBody className="flex flex-col align-middle">
             <Box className="w-full flex flex-wrap pb-4">
