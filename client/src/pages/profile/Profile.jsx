@@ -10,19 +10,19 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import Posts from "../../components/posts/Posts";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import { Link,  useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
-import Avatar from '../../assets/avatar.jpg';
-import Cover from '../../assets/cover.png';
+import Avatar from "../../assets/avatar.jpg";
+import Cover from "../../assets/cover.png";
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
-  
-   const { userId } = useParams(); 
-   console.log("userId: ", userId)
+
+  const { userId } = useParams();
+  console.log("userId: ", userId);
 
   useEffect(() => {
     window.scrollTo(0, -1);
@@ -30,7 +30,11 @@ const Profile = () => {
 
   const queryClient = useQueryClient();
 
-  const { isLoading: userDataLoading, error: userDataError, data: userData } = useQuery(["user", userId], () =>
+  const {
+    isLoading: userDataLoading,
+    error: userDataError,
+    data: userData,
+  } = useQuery(["user", userId], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
       return res.data;
     })
@@ -64,14 +68,20 @@ const Profile = () => {
 
   return (
     <div className="profile-container container-fluid pb-4">
-      {(userDataLoading || relationshipLoading) ? (
+      {userDataLoading || relationshipLoading ? (
         "loading"
       ) : (
         <>
           <div className="images">
-            <img src={userData.coverPic ? "/upload/"+userData.coverPic : Cover} alt="" className="cover" />
             <img
-              src={userData.profilePic ? "/upload/"+userData.profilePic : Avatar}
+              src={userData.coverPic ? "/upload/" + userData.coverPic : Cover}
+              alt=""
+              className="cover"
+            />
+            <img
+              src={
+                userData.profilePic ? "/upload/" + userData.profilePic : Avatar
+              }
               alt=""
               className="profilePic shadow"
             />
@@ -108,7 +118,9 @@ const Profile = () => {
                   </div>
                 </div>
                 {userId === currentUser._id ? (
-                  <button onClick={() => setOpenUpdate(true)}>Edit Profile</button>
+                  <button onClick={() => setOpenUpdate(true)}>
+                    Edit Profile
+                  </button>
                 ) : (
                   <button onClick={handleFollow}>
                     {relationshipData.includes(currentUser._id)
@@ -117,7 +129,7 @@ const Profile = () => {
                   </button>
                 )}
               </div>
-              <Link to="/message" className="right">
+              <Link to="/chats" className="right">
                 <EmailOutlinedIcon />
               </Link>
             </div>
