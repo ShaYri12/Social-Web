@@ -85,6 +85,13 @@ const Share = () => {
     setFile(null);
     setUploadProgress(0); // Reset upload progress
   }
+  else{
+    mutation.mutate({ desc, img: "" });
+    setDesc("");
+    setFile(null);
+    setUploadProgress(0); // Reset upload progress
+  }
+
 };
 
 
