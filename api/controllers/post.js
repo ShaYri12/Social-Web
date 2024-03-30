@@ -7,7 +7,7 @@ export const getPosts = async (req, res) => {
   try {
     // Verify the user's token to get their ID
     const token = req.cookies.accessToken;
-    console.log("token: ",token)
+
     if (!token) return res.status(401).json("Not authenticated!");
 
     const userInfo = jwt.verify(token, "secretkey");
@@ -21,14 +21,20 @@ export const getPosts = async (req, res) => {
     if (userId !== undefined) {
       // If userId is provided,
       // fetch only the posts of the specified user
-      const posts = await Post.find({ userId }).populate('userId').sort({ createdAt: -1 });
+      const posts = await Post.find({ userId })
+        .populate("userId")
+        .sort({ createdAt: -1 });
       return res.json(posts);
     } else {
       // If userId is undefined,
       // fetch posts of the authenticated user's followings
-      const followedUserIds = await Relationship.find({ followerUserId: userInfo.id }).distinct('followedUserId');
+      const followedUserIds = await Relationship.find({
+        followerUserId: userInfo.id,
+      }).distinct("followedUserId");
       followedUserIds.push(userInfo.id); // Include the authenticated user's ID
-      const posts = await Post.find({ userId: { $in: followedUserIds } }).populate('userId').sort({ createdAt: -1 });
+      const posts = await Post.find({ userId: { $in: followedUserIds } })
+        .populate("userId")
+        .sort({ createdAt: -1 });
       return res.json(posts);
     }
   } catch (error) {
@@ -36,8 +42,6 @@ export const getPosts = async (req, res) => {
     return res.status(500).json(error);
   }
 };
-
-
 
 export const addPost = async (req, res) => {
   try {

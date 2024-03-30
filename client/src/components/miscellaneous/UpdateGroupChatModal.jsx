@@ -3,7 +3,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
@@ -16,7 +15,6 @@ import {
   IconButton,
   Spinner,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useState } from "react";
 import { ChatState } from "../../context/ChatProvider";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
