@@ -144,7 +144,7 @@ const Share = () => {
             type="file"
             id="videoFile"
             style={{ display: "none" }}
-            accept="video/mp4, video/mov, video/mkv, video/avi, video/wmv, video/avchd, video/webm, video/flv, video/m4v"
+            accept="video/mp4,video/webm,video/mov,video/flv,video/m4v,video/ogg"
             onChange={handleVideoChange}
           />
           <label htmlFor="videoFile">
