@@ -29,7 +29,6 @@ const io = new Server(server, {
 // Connect to MongoDB
 mongoose.connect(
   "mongodb+srv://dabiduh:loco157@projectfinal.5crqbft.mongodb.net/socialappconnection?retryWrites=true&w=majority&appName=projectfinal"
-  // "mongodb+srv://uzair:uzair123@api.cpammnv.mongodb.net/Social_App?retryWrites=true&w=majority&appName=API"
 );
 
 const db = mongoose.connection;
