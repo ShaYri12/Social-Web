@@ -28,7 +28,11 @@ const io = new Server(server, {
 
 // Connect to MongoDB
 mongoose.connect(
+<<<<<<< HEAD
   "mongodb+srv://dabiduh:loco157@projectfinal.5crqbft.mongodb.net/socialappconnection?retryWrites=true&w=majority&appName=projectfinal"
+=======
+  "mongodb+srv://sharjeelbaloch345:sharjeelbaloch345@cluster0.3q0g6ko.mongodb.net/social_app?retryWrites=true&w=majority"
+>>>>>>> 6bcb50f642a3209fb80a240a104c5b608a8c6d9d
 );
 
 const db = mongoose.connection;
@@ -47,13 +51,15 @@ app.use(cors({ origin: true }));
 app.use(cookieParser());
 
 //storing
+//storing
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "../client/public/upload");
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
+    // Use the original filename provided in FormData
+    cb(null, file.originalname);
+  }
 });
 
 const upload = multer({

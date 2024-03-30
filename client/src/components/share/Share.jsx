@@ -1,7 +1,7 @@
 import "./share.scss";
 import Image from "../../assets/img.png";
 import Video from "../../assets/9.png";
-import { useContext, useState, useRef } from "react"; // Import useRef
+import { useContext, useState, useRef, useEffect } from "react"; // Import useRef
 import { AuthContext } from "../../context/authContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
@@ -14,13 +14,13 @@ const Share = () => {
   const [uploading, setUploading] = useState(false); // State to track upload status
   const videoRef = useRef(null); // Create a ref for the video element
 
-  const upload = async (e) => {
+  const upload = async (fileName,e) => {
     try {
-      if (e) {
-        e.preventDefault(); // Prevent page reload if called from an event
+      if(e){
+        e.preventDefault()
       }
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", file, fileName);
       const config = {
         onUploadProgress: (progressEvent) => {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -73,14 +73,20 @@ const Share = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     setUploading(true);
+    if (file){
+    const timestamp = Date.now();
+    const extension = file.name.split('.').pop();
+    const fileName = `file_${timestamp}_${file.name}`
+    console.log(fileName)
     
-    let mediaUrl = "";
-    if (file) mediaUrl = await upload();
-    mutation.mutate({ desc, img: mediaUrl });
+    mutation.mutate({ desc, img: fileName });
+    if (file) await upload(fileName);
     setDesc("");
     setFile(null);
     setUploadProgress(0); // Reset upload progress
-  };
+  }
+};
+
 
   return (
     <div className="share">
