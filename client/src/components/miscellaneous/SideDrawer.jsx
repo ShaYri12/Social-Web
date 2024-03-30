@@ -1,11 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   Box,
   Button,
   Input,
-  Menu,
-  MenuButton,
-  Text,
   Tooltip,
   Drawer,
   DrawerContent,
@@ -13,14 +10,12 @@ import {
   DrawerHeader,
   DrawerBody,
 } from "@chakra-ui/react";
-import { BellIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/hooks";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatState } from "../../context/ChatProvider";
 import ChatLoading from "../ChatLoading";
 import { Spinner } from "@chakra-ui/spinner";
 import { makeRequest } from "../../axios";
-import { DarkModeContext } from "../../context/darkModeContext";
 import "./drawer.scss";
 
 const SideDrawer = () => {
@@ -31,7 +26,7 @@ const SideDrawer = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { setSelectedChat, user, chats, setChats, selectedChat } = ChatState();
+  const { setSelectedChat, selectedChat } = ChatState();
 
   const handleSearch = async () => {
     if (!search) {
@@ -85,8 +80,6 @@ const SideDrawer = () => {
       console.log("Error fetching the chat:", error);
     }
   };
-
-  const { darkMode } = useContext(DarkModeContext);
 
   return (
     <div className="d-flex">

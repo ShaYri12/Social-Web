@@ -1,7 +1,5 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Box, Stack, Text } from "@chakra-ui/layout";
-import { useToast } from "@chakra-ui/toast";
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { getSender2 } from "../config/ChatLogics";
 import ChatLoading from "./ChatLoading";
@@ -10,12 +8,10 @@ import { Button } from "@chakra-ui/react";
 import { ChatState } from "../context/ChatProvider";
 import { DarkModeContext } from "../context/darkModeContext";
 
-const MyChats = ({ fetchAgain, user }) => {
+const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
   const { selectedChat, setSelectedChat, chats, setChats } = ChatState();
-
-  // const toast = useToast();
 
   const fetchChats = async () => {
     try {
