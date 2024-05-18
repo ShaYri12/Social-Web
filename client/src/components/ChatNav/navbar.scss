@@ -7,7 +7,7 @@
 .navbar-brand {
   font-weight: bold;
   font-size: 25px !important;
-  color: darkblue !important;
+  color: darkblue;
 }
 
 .profile .dropdown-menu {
@@ -42,7 +42,6 @@
   height: 45px !important;
   object-fit: cover !important;
   border: 1px solid #5271ff !important;
- 
 }
 
 .profile-name {
@@ -64,6 +63,10 @@
   padding: 5px !important;
   height: 40px !important;
 
+  .border-light {
+    border-color: #ffffff; /* White border color */
+  }
+
   svg {
     @include themify($themes) {
       color: themed("textColor") !important;
@@ -77,21 +80,22 @@
     outline: none;
   }
 
-  ol, ul {
+  ol,
+  ul {
     padding-left: 0;
 
-    a{
+    a {
       text-decoration: none;
     }
   }
 
-  .search-results{
+  .search-results {
     @include themify($themes) {
       position: absolute;
       top: 40px;
-      left:0;
+      left: 0;
       margin: auto;
-      background-color: themed('bg');
+      background-color: themed("bg");
       width: 100%;
       border-bottom-left-radius: 10px;
       border-bottom-right-radius: 10px;
@@ -99,17 +103,17 @@
       overflow-y: auto !important;
       max-height: 200px;
 
-    .search-item{
-      list-style: none;
-      padding: 10px 28px;
-      
-      &:hover{
-          background-color: themed('underLine') !important;
+      .search-item {
+        list-style: none;
+        padding: 10px 28px;
+
+        &:hover {
+          background-color: themed("underLine") !important;
           border-radius: 10px;
           color: white;
+        }
       }
     }
-  }
   }
 }
 
@@ -136,18 +140,41 @@
   }
 }
 
-.right{
-  .following{
+.right {
+  .following {
     @include themify($themes) {
       color: themed("textColor") !important;
       text-decoration: none;
-      
-      &.active{
+
+      &.active {
         color: #5271ff !important;
       }
     }
-    
   }
+}
+
+.icons {
+  padding: 10px 15px;
+  border-radius: 7px; /* Adjust the color as needed */
+}
+.icons:hover {
+  background-color: #f0f0f0; /* Adjust the color as needed */
+}
+.icons.active {
+  background-color: #f0f0f0; /* Adjust the color as needed */
+  color: blue;
+}
+
+.darkIcons {
+  padding: 10px 15px;
+  border-radius: 7px; /* Adjust the color as needed */
+}
+.darkIcons:hover {
+  background-color: #363636; /* Adjust the color as needed */
+}
+.darkIcons.active {
+  background-color: #363636; /* Adjust the color as needed */
+  color: blue;
 }
 
 .offcanvas.offcanvas-end {
@@ -162,8 +189,6 @@
   color: white !important;
 }
 
-
-
 @media screen and (max-width: 767px) {
   .nav-item svg,
   .nav-link svg,
@@ -173,12 +198,9 @@
 
   .search {
     border: none;
-    
 
-    input{
-      width:175px;
+    input {
+      width: 175px;
     }
   }
 }
-
-

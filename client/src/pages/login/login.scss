@@ -5,6 +5,8 @@
   align-items: center;
   justify-content: center;
 
+  // background-image: url("../../assets/official-whatsapp-background-image.jpg"); /* Add the path to your image */
+
   .login-form {
     margin: 20px 10px;
     width: 60%;
@@ -12,7 +14,10 @@
     background-color: white;
     border-radius: 10px;
     min-height: 600px;
+    // backdrop-filter: blur(10px);
+    border: 1px solid #716af2;
     overflow: hidden;
+    box-shadow: 7px 10px 6px rgba(0, 0, 0, 0.2);
 
     @media screen and (max-width: 1347px) {
       width: 75%;
@@ -32,10 +37,16 @@
 
     .left {
       flex: 1;
-      background: linear-gradient(rgba(39, 11, 96, 0.5), rgba(39, 11, 96, 0.5)),
-        url("https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1600")
-          center;
-      background-size: cover;
+      // background: linear-gradient(rgba(39, 11, 96, 0.5), rgba(39, 11, 96, 0.5)),
+      //   url("../../assets//images//user-login.gif") center;
+      background: linear-gradient(
+          rgba(115, 214, 239, 0.2),
+          rgba(113, 144, 248, 0.3)
+        ),
+        url("../../assets/images/login2.gif") center;
+      background-size: contain;
+      background-repeat: no-repeat;
+
       padding: 50px;
       display: flex;
       flex-direction: column;
@@ -54,8 +65,8 @@
         h1 {
           font-size: 50px;
           line-height: 50px;
-        } 
-        p{
+        }
+        p {
           font-size: 15px;
         }
       }
@@ -64,8 +75,8 @@
         h1 {
           font-size: 40px;
           line-height: 25px;
-        } 
-        p{
+        }
+        p {
           font-size: 12px;
         }
         span {
@@ -90,8 +101,8 @@
           line-height: 25px;
           margin-bottom: 0;
           padding-bottom: 0;
-        } 
-        p{
+        }
+        p {
           font-size: 10px;
           padding-top: 0;
           margin-bottom: 0;
@@ -102,7 +113,7 @@
           padding-bottom: 0;
         }
 
-        button{
+        button {
           width: 40%;
           font-size: 12px;
         }
@@ -114,8 +125,8 @@
           line-height: 0px;
           margin-bottom: 0;
           padding-bottom: 0;
-        } 
-        p{
+        }
+        p {
           font-size: 8px;
           padding-top: 0;
           margin-bottom: 0;
@@ -126,40 +137,38 @@
           padding-bottom: 0;
         }
       }
-      
+
       p {
       }
-
-      
-      
-      
     }
 
     .right {
       flex: 1;
       padding: 50px;
       display: flex;
+      // backdrop-filter: blur(80px);
       flex-direction: column;
       gap: 50px;
       justify-content: center;
 
       h1 {
-      color: #555;
+        color: #555;
       }
-      
+
       form {
         display: flex;
         flex-direction: column;
         gap: 30px;
-        
+
         input {
-        border: none;
-        border-bottom: 1px solid lightgray;
-        padding: 20px 10px;
+          border: none;
+          border-bottom: 1px solid darkcyan;
+          background: transparent;
+          padding: 20px 10px;
         }
-        
+
         button {
-          width: 50%;
+          width: 100%;
           padding: 10px;
           border: none;
           background-color: #716af2;
@@ -167,7 +176,7 @@
           font-weight: bold;
           cursor: pointer;
 
-          &:hover{
+          &:hover {
             background-color: #564df6;
             border-radius: 10px;
             transition: all 0.3s ease;

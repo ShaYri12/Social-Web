@@ -18,7 +18,6 @@ import { toast } from "react-toastify";
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
   const { currentUser } = useContext(AuthContext);
 
   const { isLoading, error, data } = useQuery(["likes", post._id], () =>

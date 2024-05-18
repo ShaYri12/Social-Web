@@ -5,16 +5,18 @@ import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/authContext";
+import Toggle from "./../DarkMode/DarkMode";
 import Avatar from "../../assets/avatar.jpg";
 import { toast } from "react-toastify";
 import { makeRequest } from "../../axios";
 
 const Navbar = () => {
-  const { toggle, darkMode } = useContext(DarkModeContext);
+  const { darkMode } = useContext(DarkModeContext);
   const { currentUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -134,10 +136,10 @@ const Navbar = () => {
       >
         <div className="container-fluid ">
           <NavLink
-            className={`navbar-brand ${darkMode ? "text-light" : ""}`}
+            className={`navbar-brand ${darkMode ? "text-white" : ""}`}
             to="/"
           >
-            Lamasocial
+            LinkUp.
           </NavLink>
           <button
             className="navbar-toggler my-auto"
@@ -175,12 +177,7 @@ const Navbar = () => {
                   darkMode ? "text-light" : ""
                 }`}
               >
-                <li className="nav-item mx-auto mx-md-2 my-auto">
-                  <NavLink className="nav-link" aria-current="page" to="/">
-                    <HomeOutlinedIcon style={{ fontSize: "26px" }} />
-                  </NavLink>
-                </li>
-                <li className="nav-item mx-auto my-auto mx-md-2">
+                {/* <li className="nav-item mx-auto my-auto mx-md-2">
                   {darkMode ? (
                     <WbSunnyOutlinedIcon
                       onClick={toggle}
@@ -192,11 +189,18 @@ const Navbar = () => {
                       style={{ cursor: "pointer" }}
                     />
                   )}
-                </li>
-                <li className="position-relative nav-item mx-auto mx-md-2 my-auto search mb-3 mb-md-0">
+                </li> */}
+                <li
+                  className={`position-relative nav-item mx-auto mx-md-2 my-auto search mb-3 mb-md-0 ${
+                    darkMode ? "border-light" : ""
+                  }`}
+                >
                   {isSearchVisible ? (
                     <>
-                      <form className="d-flex gap-1" onSubmit={handleSearch}>
+                      <form
+                        className="d-flex gap-1 align-items-center"
+                        onSubmit={handleSearch}
+                      >
                         <SearchOutlinedIcon />
                         <input
                           type="text"
@@ -232,27 +236,60 @@ const Navbar = () => {
                 </li>
               </ul>
               <div
-                className={`right d-flex flex-column flex-md-row gap-4 gap-md-3 justify-content-start ${
+                className={`right d-flex flex-column  flex-md-row gap-4 gap-md-3 justify-content-start ${
                   darkMode ? "text-light" : ""
                 }`}
               >
+                <NavLink
+                  activeStyle={{ backgroundColor: "#f0f0f0" }}
+                  className={` align-items-center d-flex flex-column justify-content-center ${
+                    darkMode ? "darkIcons" : "icons"
+                  } ${location.pathname === "/" ? "active" : ""}`}
+                  // className="icons align-items-center d-flex flex-column justify-content-center"
+                  aria-current="page"
+                  to="/"
+                >
+                  <HomeOutlinedIcon style={{ fontSize: "26px" }} />
+                </NavLink>
+
+                <NavLink
+                  className={`${
+                    darkMode ? "darkIcons" : "icons"
+                  } align-items-center d-flex flex-column justify-content-center  ${
+                    location.pathname === "/jobs" ? "active" : ""
+                  }`}
+                  // className="icons align-items-center d-flex flex-column justify-content-center"
+                  aria-current="page"
+                  to="/jobs"
+                >
+                  <WorkOutlineIcon style={{ fontSize: "24px" }} />
+                </NavLink>
+                {/* 
                 <NavLink
                   to="/followings"
                   className="following align-items-center d-flex flex-column justify-content-center"
                 >
                   <PersonOutlinedIcon />
-                </NavLink>
+                </NavLink> */}
                 <NavLink
                   to="/chats"
-                  className="message align-items-center d-flex flex-column justify-content-center"
+                  className={`${
+                    darkMode ? "darkIcons" : "icons"
+                  } align-items-center d-flex flex-column justify-content-center ${
+                    location.pathname === "/chats" ? "active" : ""
+                  }`}
+                  // className="icons align-items-center d-flex flex-column justify-content-center"
                 >
                   <EmailOutlinedIcon />
                 </NavLink>
+                <div className="following align-items-center d-flex flex-column justify-content-center">
+                  <Toggle />
+                </div>
 
                 <div className="profile dropdown align-items-center d-flex flex-column justify-content-center">
                   <div className="position-relative">
                     <button
-                      className="nav-link d-flex flex-column flex-md-row align-items-center dropdown-toggle"
+                      className="nav-link d-flex flex-column flex-md-row align-items-center "
                       type="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"

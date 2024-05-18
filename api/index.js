@@ -8,6 +8,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
+import jobRoutes from "./routes/jobs.js";
 import commentRoutes from "./routes/comments.js";
 import likeRoutes from "./routes/likes.js";
 import storyRoutes from "./routes/stories.js";
@@ -47,7 +48,6 @@ app.use(cors({ origin: true }));
 app.use(cookieParser());
 
 //storing
-//storing
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "../client/public/upload");
@@ -65,7 +65,6 @@ const upload = multer({
   },
 });
 
-//routes
 app.post("/api/upload", upload.single("file"), (req, res) => {
   console.log("uploading");
   res.status(200).json(req.file.filename);
@@ -74,6 +73,7 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/jobs", jobRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/likes", likeRoutes);
 app.use("/api/stories", storyRoutes);
@@ -88,8 +88,6 @@ server.listen(PORT, () => {
 
 // Socket.IO integration
 io.on("connection", (socket) => {
-  console.log("A user connected");
-
   socket.on("setup", (userData) => {
     socket.join(userData._id);
     socket.emit("connected");

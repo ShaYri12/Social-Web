@@ -5,30 +5,34 @@ import { useContext, useState, useRef, useEffect } from "react"; // Import useRe
 import { AuthContext } from "../../context/authContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import Avatar from '../../assets/avatar.jpg';
+import Avatar from "../../assets/avatar.jpg";
+import { DarkModeContext } from "../../context/darkModeContext";
 
 const Share = () => {
+  const { darkMode } = useContext(DarkModeContext);
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0); // State to track upload progress
   const [uploading, setUploading] = useState(false); // State to track upload status
   const videoRef = useRef(null); // Create a ref for the video element
 
-  const upload = async (fileName,e) => {
+  const upload = async (fileName, e) => {
     try {
-      if(e){
-        e.preventDefault()
+      if (e) {
+        e.preventDefault();
       }
       const formData = new FormData();
       formData.append("file", file, fileName);
       const config = {
         onUploadProgress: (progressEvent) => {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
           setUploadProgress(progress); // Update upload progress
         },
         timeout: 3600000, // Set timeout to 60 seconds (adjust as needed)
       };
-  
+
       const res = await makeRequest.post("/upload", formData, config);
       return res.data;
     } catch (err) {
@@ -36,8 +40,7 @@ const Share = () => {
       throw err; // Propagate error to the caller
     }
   };
-  
-  
+
   const { currentUser } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
@@ -73,27 +76,24 @@ const Share = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     setUploading(true);
-    if (file){
-    const timestamp = Date.now();
-    const extension = file.name.split('.').pop();
-    const fileName = `file_${timestamp}_${file.name}`
-    console.log(fileName)
-    
-    mutation.mutate({ desc, img: fileName });
-    if (file) await upload(fileName);
-    setDesc("");
-    setFile(null);
-    setUploadProgress(0); // Reset upload progress
-  }
-  else{
-    mutation.mutate({ desc, img: "" });
-    setDesc("");
-    setFile(null);
-    setUploadProgress(0); // Reset upload progress
-  }
+    if (file) {
+      const timestamp = Date.now();
+      const extension = file.name.split(".").pop();
+      const fileName = `file_${timestamp}_${file.name}`;
+      console.log(fileName);
 
-};
-
+      mutation.mutate({ desc, img: fileName });
+      if (file) await upload(fileName);
+      setDesc("");
+      setFile(null);
+      setUploadProgress(0); // Reset upload progress
+    } else {
+      mutation.mutate({ desc, img: "" });
+      setDesc("");
+      setFile(null);
+      setUploadProgress(0); // Reset upload progress
+    }
+  };
 
   return (
     <div className="share">
@@ -108,6 +108,7 @@ const Share = () => {
             <input
               type="text"
               id="desc"
+              className={`${darkMode ? "bg-dark" : "bg-transparent"}`}
               placeholder={`What's on your mind ${currentUser.name}?`}
               onChange={(e) => setDesc(e.target.value)}
               value={desc}
@@ -155,7 +156,12 @@ const Share = () => {
             </label>
           </div>
           <div className="right">
-            <button className="btn" onClick={handleClick} type="button" disabled={uploading}>
+            <button
+              className="btn"
+              onClick={handleClick}
+              type="button"
+              disabled={uploading}
+            >
               {uploading ? (
                 <span>Uploading... ({uploadProgress}%)</span>
               ) : (

@@ -16,10 +16,13 @@ import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
 import Avatar from "../../assets/avatar.jpg";
 import Cover from "../../assets/cover.png";
+import { ChatState } from "../../context/ChatProvider";
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
+  const [loadingChat, setLoadingChat] = useState(false);
+  const { setSelectedChat, selectedChat } = ChatState();
 
   const { userId } = useParams();
   console.log("userId: ", userId);
@@ -64,6 +67,32 @@ const Profile = () => {
 
   const handleFollow = () => {
     mutation.mutate(relationshipData.includes(currentUser._id));
+  };
+
+  const accessChat = async (userId) => {
+    try {
+      setLoadingChat(true);
+
+      // Make the request to the server
+      const response = await makeRequest.post(`/chat`, { userId });
+
+      // Check if the response status is within the success range
+      if (response.status >= 200 && response.status < 300) {
+        // If successful, update the selected chat and close the drawer
+        setSelectedChat(response.data);
+        console.log("selectedChat: ", selectedChat);
+      } else {
+        // If not successful, throw an error
+        throw new Error(
+          `Network response was not ok. Status: ${response.status}`
+        );
+      }
+
+      setLoadingChat(false);
+    } catch (error) {
+      // Catch and handle any errors that occur during the request
+      console.log("Error fetching the chat:", error);
+    }
   };
 
   return (
@@ -129,9 +158,15 @@ const Profile = () => {
                   </button>
                 )}
               </div>
-              <Link to="/chats" className="right">
-                <EmailOutlinedIcon />
-              </Link>
+              {userId !== currentUser._id ? (
+                <Link to="/chats" className="right">
+                  <EmailOutlinedIcon onClick={() => accessChat(userId)} />
+                </Link>
+              ) : (
+                <div className="right">
+                  <EmailOutlinedIcon />
+                </div>
+              )}
             </div>
             <Posts userId={userId} />
           </div>

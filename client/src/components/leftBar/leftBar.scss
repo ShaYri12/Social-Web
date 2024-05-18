@@ -8,8 +8,38 @@
     background-color: themed("bg");
     color: themed("textColor") !important;
     height: 100%;
+    left: -200px; /* Initially hide the left bar */
+    transition: left 0.3s ease-in-out; /* Add transition effect */
 
-    @include mobile{
+    &.visible {
+      left: 0; /* Show the left bar */
+      animation: slideInLeft 0.3s forwards; /* Apply animation when becoming visible */
+    }
+
+    &.hidden {
+      left: -200px;
+      animation: slideOutLeft 0.3s backwards;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        left: -200px; /* Starting position */
+      }
+      to {
+        left: 0; /* Final position */
+      }
+    }
+
+    @keyframes slideOutLeft {
+      from {
+        left: 0; /* Starting position */
+      }
+      to {
+        left: -200px; /* Final position */
+      }
+    }
+
+    @include mobile {
       display: none;
     }
 
@@ -22,10 +52,11 @@
       max-height: 93vh; // Set a maximum height for the left bar
       overflow: hidden; // Hide overflow initially
       width: 200px;
+      padding-bottom: 50px;
 
-    &:hover {
-      overflow-y: scroll; // Show scroll bar when hovering
-    }
+      &:hover {
+        overflow-y: scroll; // Show scroll bar when hovering
+      }
 
       hr {
         margin: 20px 0px;
@@ -39,11 +70,11 @@
         flex-direction: column;
         gap: 20px;
 
-        a{
+        a {
           color: themed("textColor") !important;
-          
-          &:hover{
-            color:blue !important
+
+          &:hover {
+            color: blue !important;
           }
         }
 
@@ -64,7 +95,6 @@
           }
 
           span {
-            
             font-size: 14px;
           }
         }
@@ -87,13 +117,48 @@
   }
 }
 
-.leftbar-behind{
+.toggle-left-bar-btn {
+  position: fixed;
+  top: 17%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 9999;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+  background-color: white;
+  padding: 5px 0;
+  padding-right: 5px;
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  &:hover {
+    padding: 5px 0;
+    padding-right: 5px;
+    padding-left: 15px;
+  }
+
+  &.visibleBtn {
+    left: 200px; /* Show the left bar */
+    animation: slideInLeftBtn 0.3s forwards; /* Apply animation when becoming visible */
+  }
+
+  @keyframes slideInLeftBtn {
+    from {
+      left: 0; /* Starting position */
+    }
+    to {
+      left: 200px; /* Final position */
+    }
+  }
+}
+
+.leftbar-behind {
   width: 200px;
 }
 
 @media screen and (max-width: 768px) {
-  .leftbar-behind{
-    display:none !important;
+  .leftbar-behind {
+    display: none !important;
   }
   .leftBar {
     display: none !important;

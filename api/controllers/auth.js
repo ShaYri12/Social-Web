@@ -32,7 +32,6 @@ export const register = async (req, res) => {
   }
 };
 
-
 export const login = async (req, res) => {
   try {
     // Find user by username
@@ -48,20 +47,21 @@ export const login = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user.id }, "secretkey");
+    const token = jwt.sign({ id: user.id }, "secretkey", { expiresIn: "15d" });
 
     // Exclude password from response
     const { password, ...others } = user.toObject();
 
     // Set token in cookie and send user data
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      // Set maxAge to a value in milliseconds to specify the cookie's expiration time
-      maxAge: 7 * 24 * 60 * 60 * 1000, // Example: 7 days
-      // You can also set other cookie attributes as needed
-      // secure: true, // Uncomment this line if using HTTPS
-      // sameSite: "none", // Uncomment this line if cross-origin requests need to send cookies
-    })
+    res
+      .cookie("accessToken", token, {
+        httpOnly: true,
+        // Set maxAge to a value in milliseconds to specify the cookie's expiration time
+        maxAge: 7 * 24 * 60 * 60 * 1000, // Example: 7 days
+        // You can also set other cookie attributes as needed
+        // secure: true, // Uncomment this line if using HTTPS
+        // sameSite: "none", // Uncomment this line if cross-origin requests need to send cookies
+      })
       .status(200)
       .json(others);
   } catch (error) {

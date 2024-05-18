@@ -11,6 +11,9 @@ import LeftBar from "./components/leftBar/LeftBar";
 import RightBar from "./components/rightBar/RightBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
+import Jobs from "./pages/Jobs/Jobs";
+import Open from "./pages/OpenJobs/Jobs";
+import Closed from "./pages/ClosedJobs/Jobs";
 import "./style.scss";
 import { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
@@ -111,6 +114,18 @@ function App() {
         {
           path: "/",
           element: <Home />,
+        },
+        {
+          path: "/jobs",
+          element: <Jobs />,
+        },
+        {
+          path: "/jobs/open",
+          element: <Open />,
+        },
+        {
+          path: "/jobs/closed",
+          element: <Closed />,
         },
         {
           path: "/profile/:userId",

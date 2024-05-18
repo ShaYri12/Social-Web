@@ -4,16 +4,16 @@
   @include themify($themes) {
     flex: 3;
     position: fixed;
-    height:100%;
+    height: 100%;
     overflow: scroll;
     right: 0;
     background-color: themed("bgSoft");
     width: 350px;
 
-    @include mobile{
+    @include mobile {
       display: none;
     }
-    @include tablet{
+    @include tablet {
       display: none;
     }
 
@@ -74,14 +74,12 @@
               font-weight: 500;
               color: themed("textColor");
             }
-
           }
 
           .buttons {
             display: flex;
             align-items: center;
             gap: 10px;
-
 
             button {
               border: none;
@@ -90,14 +88,14 @@
               padding: 3px 4px;
 
               &:first-child {
-                background-color: #5271ff;
+                background-color: #22d245;
               }
 
               &:last-child {
                 background-color: #f0544f;
               }
 
-              svg{
+              svg {
                 font-size: 20px;
               }
             }
@@ -108,36 +106,36 @@
   }
 }
 
-.rightbar-behind{
+.rightbar-behind {
   width: 350px;
 }
 
 @media screen and (max-width: 1073px) {
   .rightBar,
-  .rightbar-behind{
+  .rightbar-behind {
     width: 290px !important;
   }
 }
 
 @media screen and (max-width: 1011px) {
   .rightBar,
-  .rightbar-behind{
+  .rightbar-behind {
     width: 260px !important;
     font-size: 12px;
-    img{
+    img {
       width: 30px !important;
       height: 30px !important;
     }
-    .btn{
+    .btn {
       padding: 0 4px !important;
       margin: 0 !important;
-      svg{
+      svg {
         font-size: 15px !important;
         padding: 0;
       }
     }
 
-    .online{
+    .online {
       width: 8px !important;
       height: 8px !important;
       left: 23px !important;
@@ -147,14 +145,14 @@
 
 @media screen and (max-width: 982px) {
   .rightBar,
-  .rightbar-behind{
+  .rightbar-behind {
     width: 240px !important;
     font-size: 12px;
   }
 }
 
 @media screen and (max-width: 961px) {
-  .rightbar-behind{
+  .rightbar-behind {
     display: none !important;
   }
 }

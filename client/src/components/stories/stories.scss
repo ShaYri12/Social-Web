@@ -2,8 +2,8 @@
 
 .stories-heading {
   @include themify($themes) {
-  color: themed("textColor");
-  padding-top: 17px;
+    color: themed("textColor");
+    padding-top: 17px;
   }
 }
 
@@ -18,31 +18,28 @@
   @include mobile {
     height: 70px !important;
     margin-bottom: 0;
-    
   }
 
   @include tablet {
     height: 150px;
-    
   }
 
-  .no-story{
+  .no-story {
     @include themify($themes) {
-    color: themed("textColor");
+      color: themed("textColor");
     }
 
-    @media screen and (max-width: 480px){
-      align-self:flex-start;
+    @media screen and (max-width: 480px) {
+      align-self: flex-start;
       margin-top: 13px !important;
     }
   }
 
-  .my-story{
+  .my-story {
     overflow-y: hidden;
   }
 
   .story {
-    
     border-radius: 10px;
     overflow: hidden;
     position: relative;
@@ -59,13 +56,12 @@
       width: 50px !important;
       height: 50px;
       padding: 0;
-      margin: 0 ;
+      margin: 0;
       border-radius: 50%;
-      border: 1px solid #5271ff;
-      
+      border: 1px solid #564df6;
     }
 
-    &:hover{
+    &:hover {
       cursor: pointer;
     }
 
@@ -75,7 +71,7 @@
       object-fit: cover;
     }
 
-    .story-profile{
+    .story-profile {
       width: 40px;
       height: 40px;
     }
@@ -96,15 +92,19 @@
       position: absolute; // Position the button relative to its container
       top: 50%; // Place the button at 50% from the top
       left: 50%; // Place the button at 50% from the left
-      transform: translate(-50%, -50%); // Center the button both horizontally and vertically
+      transform: translate(
+        -50%,
+        -50%
+      ); // Center the button both horizontally and vertically
       z-index: 1;
+      background: #716af2;
 
       @include mobile {
         padding: 0;
         font-size: 12px;
       }
     }
-    
+
     div {
       position: absolute;
       bottom: 10px;
@@ -133,7 +133,6 @@
       }
     }
   }
-  
 }
 
 .modal-overlay {
@@ -150,12 +149,12 @@
 }
 
 .modal-content {
-  width: 90%; 
-  max-width: 600px; 
+  width: 90%;
+  max-width: 600px;
   background-color: #fff;
-  border-radius: 8px; 
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
   .story-delete {
     position: absolute;
