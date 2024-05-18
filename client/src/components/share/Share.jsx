@@ -142,18 +142,19 @@ const Share = () => {
               </div>
             </label>
             <input
-              type="file"
-              id="videoFile"
-              style={{ display: "none" }}
-              accept="video/*"
-              onChange={handleVideoChange}
-            />
-            <label htmlFor="videoFile">
-              <div className="item">
-                <img src={Video} alt="" />
-                <span>Add Video</span>
-              </div>
-            </label>
+            type="file"
+            id="videoFile"
+            style={{ display: "none" }}
+            accept="video/mp4,video/webm,video/mov,video/flv,video/m4v,video/ogg"
+            onChange={handleVideoChange}
+          />
+          <label htmlFor="videoFile">
+            <div className="item">
+              <img src={Video} alt="" />
+              <span>Add Video</span>
+            </div>
+          </label>
+          
           </div>
           <div className="right">
             <button

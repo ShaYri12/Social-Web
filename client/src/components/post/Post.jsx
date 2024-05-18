@@ -61,6 +61,11 @@ const Post = ({ post }) => {
     toast.success("Post Deleted Successfull");
   };
 
+  const isVideo = (fileName) => {
+    const videoExtensions = [".mp4", ".mov", ".mkv", ".avi", ".wmv", ".avchd", ".webm", ".flv", ".m4v"];
+    return videoExtensions.some(ext => fileName.toLowerCase().endsWith(ext));
+  };
+
   return (
     <div className="post">
       <div className="container">
@@ -90,14 +95,13 @@ const Post = ({ post }) => {
         </div>
         <div className="content">
           <p>{post.desc}</p>
-          {post.img &&
-            (post.img.endsWith(".mp4") ? (
-              <video className="media" controls>
-                <source src={"/upload/" + post.img} type="video/mp4" />
-              </video>
-            ) : (
-              <img className="media" src={"/upload/" + post.img} alt="" />
-            ))}
+          {post.img && isVideo(post.img) ? (
+            <video className="media" controls>
+              <source src={"/upload/" + post.img} type={`video/${post.img.split('.').pop()}`} />
+            </video>
+          ) : (
+            <img className="media" src={"/upload/" + post.img} alt="" />
+          )}
         </div>
         <div className="info">
           <div className="item">
